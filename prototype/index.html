@@ -1,0 +1,1014 @@
+<title>Situational Awareness · 职场态势感知社群</title>
+<style>
+  :root{
+    --bg:#F4F6F5;
+    --surface:#FFFFFF;
+    --surface-raised:#FFFFFF;
+    --text:#16232E;
+    --text-soft:#5B6B77;
+    --text-faint:#8A98A2;
+    --border:#DCE2E0;
+    --border-soft:#E9ECEA;
+    --accent:#C97A2E;
+    --accent-strong:#A85F1D;
+    --accent-soft:#F3E3CC;
+    --jade:#2E7D6B;
+    --jade-soft:#E1EFEA;
+    --brick:#B14A3A;
+    --brick-soft:#F5E3DF;
+    --sidebar-bg:#16232E;
+    --sidebar-text:#B9C9CE;
+    --sidebar-text-dim:#7C8E96;
+    --sidebar-active:#20313E;
+    --shadow-sm: 0 1px 2px rgba(22,35,46,0.06);
+    --shadow-md: 0 6px 20px rgba(22,35,46,0.08);
+    --radius: 10px;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0F1820;
+      --surface:#182530;
+      --surface-raised:#1E2E3A;
+      --text:#E7ECEE;
+      --text-soft:#9FB0BA;
+      --text-faint:#6F828C;
+      --border:#2B3B46;
+      --border-soft:#233240;
+      --accent:#E0A059;
+      --accent-strong:#F0B876;
+      --accent-soft:#3A2E1C;
+      --jade:#4FA593;
+      --jade-soft:#1B3530;
+      --brick:#D97764;
+      --brick-soft:#3A2420;
+      --sidebar-bg:#0A1117;
+      --sidebar-text:#AEBFC5;
+      --sidebar-text-dim:#5E717A;
+      --sidebar-active:#16222B;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+      --shadow-md: 0 10px 26px rgba(0,0,0,0.35);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0F1820; --surface:#182530; --surface-raised:#1E2E3A;
+    --text:#E7ECEE; --text-soft:#9FB0BA; --text-faint:#6F828C;
+    --border:#2B3B46; --border-soft:#233240;
+    --accent:#E0A059; --accent-strong:#F0B876; --accent-soft:#3A2E1C;
+    --jade:#4FA593; --jade-soft:#1B3530;
+    --brick:#D97764; --brick-soft:#3A2420;
+    --sidebar-bg:#0A1117; --sidebar-text:#AEBFC5; --sidebar-text-dim:#5E717A; --sidebar-active:#16222B;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3); --shadow-md: 0 10px 26px rgba(0,0,0,0.35);
+    color-scheme: dark;
+  }
+  :root[data-theme="light"]{
+    --bg:#F4F6F5; --surface:#FFFFFF; --surface-raised:#FFFFFF;
+    --text:#16232E; --text-soft:#5B6B77; --text-faint:#8A98A2;
+    --border:#DCE2E0; --border-soft:#E9ECEA;
+    --accent:#C97A2E; --accent-strong:#A85F1D; --accent-soft:#F3E3CC;
+    --jade:#2E7D6B; --jade-soft:#E1EFEA;
+    --brick:#B14A3A; --brick-soft:#F5E3DF;
+    --sidebar-bg:#16232E; --sidebar-text:#B9C9CE; --sidebar-text-dim:#7C8E96; --sidebar-active:#20313E;
+    --shadow-sm: 0 1px 2px rgba(22,35,46,0.06); --shadow-md: 0 6px 20px rgba(22,35,46,0.08);
+    color-scheme: light;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",Arial,sans-serif;
+    font-size:14px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.serif{
+    font-family:"Songti SC","STSong","Noto Serif SC",Georgia,serif;
+    font-weight:600;
+    text-wrap:balance;
+    margin:0;
+    color:var(--text);
+  }
+  .num{ font-variant-numeric:tabular-nums; }
+  button{ font-family:inherit; }
+  a{ color:inherit; }
+  ::selection{ background:var(--accent-soft); }
+
+  /* ---------- App shell ---------- */
+  .app{ display:flex; min-height:100vh; }
+
+  .sidebar{
+    width:232px; flex:none;
+    background:var(--sidebar-bg);
+    color:var(--sidebar-text);
+    display:flex; flex-direction:column;
+    padding:22px 14px;
+    position:sticky; top:0; height:100vh;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; padding:4px 8px 22px; }
+  .brand svg{ flex:none; }
+  .brand-name{ font-family:"Songti SC","STSong",Georgia,serif; font-size:15.5px; font-weight:600; color:#F2F0EA; letter-spacing:.2px; }
+  .brand-sub{ font-size:11px; color:var(--sidebar-text-dim); margin-top:1px; }
+
+  .nav{ display:flex; flex-direction:column; gap:2px; margin-top:6px; }
+  .nav-item{
+    display:flex; align-items:center; gap:11px;
+    padding:10px 12px; border-radius:8px;
+    color:var(--sidebar-text); background:transparent; border:none;
+    cursor:pointer; text-align:left; font-size:13.5px;
+    transition:background .15s ease, color .15s ease;
+  }
+  .nav-item svg{ flex:none; opacity:.85; }
+  .nav-item:hover{ background:var(--sidebar-active); color:#EDEFEC; }
+  .nav-item.active{ background:var(--sidebar-active); color:#F2E7D2; }
+  .nav-item.active svg{ opacity:1; }
+  .nav-item .badge-dot{ margin-left:auto; width:7px; height:7px; border-radius:50%; background:var(--accent); }
+
+  .sidebar-footer{ margin-top:auto; padding-top:14px; border-top:1px solid rgba(255,255,255,0.08); }
+  .mini-profile{ display:flex; align-items:center; gap:10px; padding:8px; border-radius:8px; cursor:pointer; }
+  .mini-profile:hover{ background:var(--sidebar-active); }
+  .mini-avatar{ width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent-strong)); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; color:#241505; flex:none; }
+  .mini-meta{ min-width:0; }
+  .mini-name{ font-size:13px; color:#EDEFEC; font-weight:600; }
+  .mini-role{ font-size:11px; color:var(--sidebar-text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+  .main{ flex:1; min-width:0; display:flex; flex-direction:column; }
+
+  .topbar{
+    height:64px; flex:none; display:flex; align-items:center; gap:16px;
+    padding:0 28px; border-bottom:1px solid var(--border);
+    background:var(--surface); position:sticky; top:0; z-index:5;
+  }
+  .topbar h1{ font-size:19px; }
+  .search{
+    flex:1; max-width:360px; display:flex; align-items:center; gap:8px;
+    background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:8px 12px;
+    color:var(--text-faint);
+  }
+  .search input{ border:none; background:transparent; outline:none; color:var(--text); font-size:13px; width:100%; }
+  .topbar-right{ margin-left:auto; display:flex; align-items:center; gap:14px; }
+  .anon-toggle{ display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--text-soft); }
+  .switch{ width:36px; height:20px; border-radius:999px; background:var(--border); position:relative; cursor:pointer; transition:background .15s ease; flex:none; }
+  .switch::after{ content:""; position:absolute; top:2px; left:2px; width:16px; height:16px; border-radius:50%; background:var(--surface); box-shadow:var(--shadow-sm); transition:left .15s ease; }
+  .switch.on{ background:var(--accent); }
+  .switch.on::after{ left:18px; }
+  .icon-btn{ width:34px; height:34px; border-radius:8px; border:1px solid var(--border); background:var(--surface); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--text-soft); position:relative; }
+  .icon-btn:hover{ background:var(--bg); }
+  .dot-flag{ position:absolute; top:6px; right:6px; width:6px; height:6px; border-radius:50%; background:var(--brick); }
+
+  .content{ flex:1; overflow:auto; }
+  .view{ display:none; padding:26px 28px 60px; }
+  .view.active{ display:block; }
+  .view-wrap{ max-width:900px; margin:0 auto; }
+  .view-wrap.wide{ max-width:1080px; }
+
+  /* ---------- shared bits ---------- */
+  .chip-row{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; }
+  .chip{
+    border:1px solid var(--border); background:var(--surface); color:var(--text-soft);
+    padding:6px 13px; border-radius:999px; font-size:12.5px; cursor:pointer;
+    display:flex; align-items:center; gap:6px;
+  }
+  .chip:hover{ border-color:var(--accent); color:var(--text); }
+  .chip.active{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent-strong); font-weight:600; }
+
+  .card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); }
+
+  .btn{ border:1px solid var(--border); background:var(--surface); color:var(--text); padding:9px 16px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; }
+  .btn:hover{ background:var(--bg); }
+  .btn-primary{ background:var(--accent); border-color:var(--accent); color:#241505; }
+  .btn-primary:hover{ background:var(--accent-strong); border-color:var(--accent-strong); }
+  .btn-ghost{ border:none; background:transparent; color:var(--text-soft); }
+  .btn-ghost:hover{ color:var(--text); text-decoration:underline; }
+  .btn-sm{ padding:6px 11px; font-size:12px; }
+
+  .tag{ font-size:11px; padding:2px 8px; border-radius:5px; font-weight:600; letter-spacing:.2px; }
+  .tag.cat-decision{ background:var(--brick-soft); color:var(--brick); }
+  .tag.cat-conflict{ background:var(--accent-soft); color:var(--accent-strong); }
+  .tag.cat-boss{ background:var(--jade-soft); color:var(--jade); }
+  .tag.cat-present{ background:var(--jade-soft); color:var(--jade); }
+  .tag.cat-growth{ background:var(--accent-soft); color:var(--accent-strong); }
+  .tag.pinned{ background:var(--text); color:var(--surface); }
+
+  .avatar{ width:38px; height:38px; border-radius:50%; flex:none; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:var(--surface); }
+  .avatar.anon{ background:linear-gradient(135deg,#7C8E96,#4E606A); }
+  .avatar.a1{ background:linear-gradient(135deg,var(--accent),var(--accent-strong)); }
+  .avatar.a2{ background:linear-gradient(135deg,var(--jade),#1F5C50); }
+  .avatar.a3{ background:linear-gradient(135deg,#8A6FB0,#5E4780); }
+  .avatar.a4{ background:linear-gradient(135deg,var(--brick),#7E3226); }
+  .avatar.sm{ width:28px; height:28px; font-size:11px; }
+
+  /* Feed */
+  .post-card{ padding:18px 20px; margin-bottom:12px; cursor:pointer; transition:box-shadow .15s ease, border-color .15s ease; }
+  .post-card:hover{ box-shadow:var(--shadow-md); border-color:var(--border); }
+  .post-top{ display:flex; gap:12px; }
+  .post-meta-line{ display:flex; align-items:center; gap:8px; margin-bottom:4px; flex-wrap:wrap; }
+  .post-author{ font-size:12.5px; font-weight:600; color:var(--text-soft); }
+  .post-time{ font-size:12px; color:var(--text-faint); }
+  .post-title{ font-size:15.5px; font-weight:600; margin:2px 0 4px; }
+  .post-snippet{ font-size:13px; color:var(--text-soft); overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  .post-stats{ display:flex; gap:16px; margin-top:10px; font-size:12px; color:var(--text-faint); }
+  .post-stats span{ display:flex; align-items:center; gap:5px; }
+
+  /* Thread */
+  .back-link{ display:inline-flex; align-items:center; gap:6px; color:var(--text-soft); font-size:13px; margin-bottom:16px; cursor:pointer; }
+  .back-link:hover{ color:var(--text); }
+  .thread-op{ padding:22px; margin-bottom:18px; }
+  .thread-body{ font-size:14.5px; margin-top:12px; white-space:pre-line; color:var(--text); }
+  .reply-item{ display:flex; gap:12px; padding:16px 0; border-top:1px solid var(--border-soft); }
+  .reply-item.mentor{ background:var(--jade-soft); margin:0 -20px; padding:16px 20px; border-top:none; border-radius:8px; }
+  .reply-head{ display:flex; align-items:center; gap:8px; margin-bottom:4px; flex-wrap:wrap; }
+  .reply-name{ font-size:13px; font-weight:700; }
+  .mentor-flag{ font-size:10.5px; background:var(--jade); color:#0C221D; padding:1px 7px; border-radius:5px; font-weight:700; }
+  .reply-text{ font-size:13.5px; color:var(--text); white-space:pre-line; }
+  .replies-wrap{ padding:6px 20px 4px; }
+  .composer{ margin-top:18px; padding:16px 20px; }
+  .composer textarea{ width:100%; border:1px solid var(--border); border-radius:8px; padding:10px 12px; background:var(--bg); color:var(--text); font-family:inherit; font-size:13.5px; resize:vertical; min-height:64px; }
+  .composer-row{ display:flex; align-items:center; margin-top:10px; gap:14px; }
+  .checkbox-line{ display:flex; align-items:center; gap:7px; font-size:12.5px; color:var(--text-soft); }
+  .checkbox-line input{ accent-color:var(--accent); }
+
+  /* Messages */
+  .msg-grid{ display:grid; grid-template-columns:280px 1fr; gap:18px; height:calc(100vh - 160px); min-height:520px; }
+  .conv-list{ overflow:auto; padding:8px; }
+  .conv-item{ display:flex; gap:10px; padding:11px 10px; border-radius:8px; cursor:pointer; align-items:flex-start; }
+  .conv-item:hover{ background:var(--bg); }
+  .conv-item.active{ background:var(--accent-soft); }
+  .conv-name{ font-size:13px; font-weight:700; }
+  .conv-preview{ font-size:12px; color:var(--text-faint); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:170px; }
+  .conv-section-label{ font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:var(--text-faint); padding:12px 10px 6px; }
+  .chat-panel{ display:flex; flex-direction:column; }
+  .chat-header{ padding:14px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
+  .chat-body{ flex:1; overflow:auto; padding:18px; display:flex; flex-direction:column; gap:10px; }
+  .bubble{ max-width:64%; padding:9px 13px; border-radius:12px; font-size:13.5px; }
+  .bubble.them{ align-self:flex-start; background:var(--bg); border:1px solid var(--border); border-bottom-left-radius:3px; }
+  .bubble.me{ align-self:flex-end; background:var(--accent-soft); border-bottom-right-radius:3px; }
+  .chat-input-row{ padding:14px 18px; border-top:1px solid var(--border); display:flex; gap:10px; }
+  .chat-input-row input{ flex:1; border:1px solid var(--border); border-radius:8px; padding:9px 12px; background:var(--bg); color:var(--text); font-size:13.5px; outline:none; }
+  .req-note{ font-size:11.5px; color:var(--text-faint); padding:0 18px 12px; }
+
+  /* Knowledge base */
+  .kb-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:14px; }
+  .kb-card{ padding:18px; display:flex; flex-direction:column; gap:10px; }
+  .kb-card h3{ font-size:15px; }
+  .kb-tags{ display:flex; gap:6px; flex-wrap:wrap; }
+  .kb-points{ font-size:13px; color:var(--text-soft); margin:0; padding-left:18px; }
+  .kb-points li{ margin-bottom:4px; }
+  .kb-source{ font-size:12px; color:var(--text-faint); margin-top:auto; padding-top:6px; border-top:1px solid var(--border-soft); }
+
+  /* Leaderboard */
+  .lb-tabs{ display:flex; gap:6px; margin-bottom:16px; }
+  table.lb{ width:100%; border-collapse:collapse; }
+  table.lb th{ text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:var(--text-faint); padding:0 14px 10px; font-weight:600; }
+  table.lb td{ padding:12px 14px; border-top:1px solid var(--border-soft); font-size:13.5px; vertical-align:middle; }
+  table.lb tr:hover td{ background:var(--bg); }
+  .rank-num{ font-weight:700; color:var(--text-soft); width:24px; display:inline-block; }
+  .lb-name-row{ display:flex; align-items:center; gap:10px; }
+  .lb-badges{ display:flex; gap:4px; }
+  .lb-points{ font-weight:700; }
+
+  .banner-reward{ display:flex; align-items:center; gap:20px; padding:20px 22px; margin-bottom:20px; background:linear-gradient(120deg,var(--accent-soft),var(--surface)); }
+  .reward-icon{ width:52px; height:52px; border-radius:12px; background:var(--surface); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; flex:none; }
+  .progress-track{ height:8px; border-radius:999px; background:var(--border); overflow:hidden; margin-top:8px; }
+  .progress-fill{ height:100%; background:var(--accent); border-radius:999px; }
+
+  .badge-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; margin-top:14px; }
+  .badge-card{ padding:16px; text-align:left; display:flex; gap:12px; align-items:flex-start; }
+  .badge-emoji{ font-size:22px; width:40px; height:40px; border-radius:10px; background:var(--bg); display:flex; align-items:center; justify-content:center; flex:none; }
+  .badge-card h4{ font-size:13.5px; margin:0 0 3px; font-weight:700; }
+  .badge-card p{ margin:0; font-size:12px; color:var(--text-soft); }
+
+  /* Weekly dinner */
+  .dinner-hero{ padding:26px; display:flex; gap:24px; align-items:center; margin-bottom:20px; }
+  .dinner-visual{ width:100px; height:100px; border-radius:14px; flex:none; background:radial-gradient(circle at 30% 30%,var(--accent),var(--accent-strong)); display:flex; align-items:center; justify-content:center; }
+  .dinner-meta{ display:flex; gap:18px; margin-top:10px; font-size:13px; color:var(--text-soft); flex-wrap:wrap; }
+  .rsvp-row{ display:flex; align-items:center; gap:6px; margin-top:14px; }
+  .rsvp-avatars{ display:flex; }
+  .rsvp-avatars .avatar{ width:26px; height:26px; font-size:10px; margin-left:-8px; border:2px solid var(--surface); }
+  .rsvp-avatars .avatar:first-child{ margin-left:0; }
+  .auto-email-card{ display:flex; align-items:center; gap:16px; padding:16px 20px; margin-bottom:20px; }
+  .past-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; }
+  .past-card{ overflow:hidden; }
+  .past-photo{ height:96px; }
+  .past-body{ padding:14px 16px; }
+  .past-quote{ font-size:12.5px; color:var(--text-soft); font-style:italic; margin-top:6px; }
+
+  /* Profile */
+  .profile-hero{ display:flex; gap:18px; align-items:center; padding:22px; margin-bottom:18px; }
+  .profile-stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:18px; }
+  .stat-card{ padding:16px; text-align:center; }
+  .stat-num{ font-size:22px; font-weight:700; font-family:"Songti SC",Georgia,serif; }
+  .stat-label{ font-size:11.5px; color:var(--text-faint); margin-top:2px; }
+  .settings-row{ display:flex; align-items:center; justify-content:space-between; padding:14px 0; border-top:1px solid var(--border-soft); }
+  .settings-row:first-child{ border-top:none; }
+  .settings-title{ font-size:13.5px; font-weight:600; }
+  .settings-desc{ font-size:12px; color:var(--text-faint); margin-top:2px; }
+
+  .section-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:14px; }
+  .section-head p{ margin:2px 0 0; color:var(--text-soft); font-size:13px; }
+
+  .toast{
+    position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--text); color:var(--bg); padding:11px 20px; border-radius:8px; font-size:13px;
+    opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease; box-shadow:var(--shadow-md); z-index:50;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  @media (max-width:880px){
+    .sidebar{ display:none; }
+    .msg-grid{ grid-template-columns:1fr; height:auto; }
+  }
+</style>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+        <circle cx="15" cy="15" r="12.5" stroke="#E0A059" stroke-width="1.6"/>
+        <path d="M15 6 L18 15 L15 24 L12 15 Z" fill="#E0A059"/>
+        <circle cx="15" cy="15" r="1.6" fill="#16232E"/>
+      </svg>
+      <div>
+        <div class="brand-name">Situational<br/>Awareness</div>
+      </div>
+    </div>
+    <div class="brand-sub" style="margin:-14px 0 18px 4px;">职场态势感知社群</div>
+
+    <nav class="nav">
+      <button class="nav-item active" data-view="feed">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v10H8l-4 4z"/></svg>
+        讨论广场
+      </button>
+      <button class="nav-item" data-view="messages">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="16" cy="12" r="1"/><rect x="3" y="5" width="18" height="14" rx="3"/></svg>
+        私信与群聊
+        <span class="badge-dot"></span>
+      </button>
+      <button class="nav-item" data-view="kb">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V6a2 2 0 0 1 2-2h6v16H6a2 2 0 0 0-2 2Z"/><path d="M20 19V6a2 2 0 0 0-2-2h-6v16"/></svg>
+        知识库
+      </button>
+      <button class="nav-item" data-view="leaderboard">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 21h8M12 17v4M6 4h12v4a6 6 0 0 1-12 0V4Z"/><path d="M6 6H3v1a4 4 0 0 0 3 3.8M18 6h3v1a4 4 0 0 1-3 3.8"/></svg>
+        排行榜 &amp; 徽章
+      </button>
+      <button class="nav-item" data-view="dinner">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 3v6M5 3v6a2 2 0 0 0 4 0V3M17 3c-1.5 1-2 3-2 5s1 3 2 3v10"/></svg>
+        Weekly 饭局
+      </button>
+      <button class="nav-item" data-view="profile">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.5-4 4.5-6 7.5-6s6 2 7.5 6"/></svg>
+        我的主页
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="mini-profile" data-view="profile">
+        <div class="mini-avatar">夜</div>
+        <div class="mini-meta">
+          <div class="mini-name">夜航 · 匿名可选</div>
+          <div class="mini-role">科技行业 · 386 积分</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <h1 id="view-title">讨论广场</h1>
+      <div class="search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input type="text" placeholder="搜索场景、案例、关键词…" />
+      </div>
+      <div class="topbar-right">
+        <div class="anon-toggle">
+          <span>匿名模式</span>
+          <div class="switch" id="anonSwitch" onclick="toggleAnon()"></div>
+        </div>
+        <div class="icon-btn" title="通知">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6Z"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
+          <span class="dot-flag"></span>
+        </div>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- ================= FEED ================= -->
+      <div class="view active" id="view-feed">
+        <div class="view-wrap">
+          <div class="chip-row" id="catChips">
+            <div class="chip active" data-cat="all">全部</div>
+            <div class="chip" data-cat="decision">决策两难</div>
+            <div class="chip" data-cat="conflict">团队冲突</div>
+            <div class="chip" data-cat="boss">沟通与上级</div>
+            <div class="chip" data-cat="present">演讲教练</div>
+            <div class="chip" data-cat="growth">职场成长</div>
+            <div class="btn btn-primary btn-sm" style="margin-left:auto;" onclick="showToast('发帖功能为演示版，实际产品中会打开发帖编辑器')">＋ 发帖求建议</div>
+          </div>
+          <div id="feedList"></div>
+        </div>
+      </div>
+
+      <!-- ================= THREAD ================= -->
+      <div class="view" id="view-thread">
+        <div class="view-wrap">
+          <div class="back-link" onclick="goView('feed')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+            返回讨论广场
+          </div>
+          <div id="threadContent"></div>
+        </div>
+      </div>
+
+      <!-- ================= MESSAGES ================= -->
+      <div class="view" id="view-messages">
+        <div class="view-wrap wide">
+          <div class="msg-grid">
+            <div class="card conv-list" id="convList"></div>
+            <div class="card chat-panel">
+              <div class="chat-header" id="chatHeader"></div>
+              <div class="chat-body" id="chatBody"></div>
+              <div class="req-note" id="chatReqNote"></div>
+              <div class="chat-input-row">
+                <input type="text" id="chatInput" placeholder="输入消息…（本演示消息仅本地展示）" onkeydown="if(event.key==='Enter')sendChat()"/>
+                <button class="btn btn-primary btn-sm" onclick="sendChat()">发送</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= KNOWLEDGE BASE ================= -->
+      <div class="view" id="view-kb">
+        <div class="view-wrap wide">
+          <div class="section-head">
+            <div>
+              <h2>知识库</h2>
+              <p>由高热度讨论沉淀出的案例总结，越多人经历过的困境，沉淀出的判断越可靠。</p>
+            </div>
+          </div>
+          <div class="chip-row" id="kbChips">
+            <div class="chip active" data-tag="all">全部</div>
+            <div class="chip" data-tag="组织政治">组织政治</div>
+            <div class="chip" data-tag="沟通">沟通</div>
+            <div class="chip" data-tag="团队管理">团队管理</div>
+            <div class="chip" data-tag="表达力">表达力</div>
+            <div class="chip" data-tag="晋升">晋升</div>
+          </div>
+          <div class="kb-grid" id="kbGrid"></div>
+        </div>
+      </div>
+
+      <!-- ================= LEADERBOARD ================= -->
+      <div class="view" id="view-leaderboard">
+        <div class="view-wrap wide">
+          <div class="banner-reward">
+            <div class="reward-icon">🧲</div>
+            <div style="flex:1;">
+              <div style="font-weight:700; font-size:14px;">年度徽章冰箱贴 · 还差 114 积分</div>
+              <div style="font-size:12.5px; color:var(--text-soft); margin-top:2px;">积分来自被采纳的回答、知识库收录、发起线下饭局。年底按积分兑换限定冰箱贴徽章套装。</div>
+              <div class="progress-track"><div class="progress-fill" style="width:63%"></div></div>
+            </div>
+          </div>
+
+          <div class="section-head"><h2>贡献排行榜</h2></div>
+          <div class="lb-tabs">
+            <div class="chip active" data-lb="week">本周</div>
+            <div class="chip" data-lb="month">本月</div>
+            <div class="chip" data-lb="year">年度</div>
+          </div>
+          <div class="card">
+            <table class="lb">
+              <thead><tr><th>排名</th><th>成员</th><th>行业</th><th>徽章</th><th style="text-align:right;">积分</th></tr></thead>
+              <tbody id="lbBody"></tbody>
+            </table>
+          </div>
+
+          <div class="section-head" style="margin-top:26px;"><h2>徽章体系</h2></div>
+          <div class="badge-grid" id="badgeGrid"></div>
+        </div>
+      </div>
+
+      <!-- ================= WEEKLY DINNER ================= -->
+      <div class="view" id="view-dinner">
+        <div class="view-wrap wide">
+          <div class="card dinner-hero">
+            <div class="dinner-visual">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#241505" stroke-width="1.8"><path d="M7 3v6M5 3v6a2 2 0 0 0 4 0V3M17 3c-1.5 1-2 3-2 5s1 3 2 3v10"/></svg>
+            </div>
+            <div style="flex:1;">
+              <div class="tag cat-growth" style="margin-bottom:8px; display:inline-block;">本周主题</div>
+              <h2 style="font-size:19px;">跨行业饭局：科技 × 金融的决策思维</h2>
+              <div class="dinner-meta">
+                <span>📅 本周五 9月18日 · 19:00</span>
+                <span>📍 湾区 · 具体地址活动前一天邮件通知</span>
+                <span>👥 12/16 已报名</span>
+              </div>
+              <div class="rsvp-row">
+                <div class="rsvp-avatars">
+                  <div class="avatar a1 sm">冬</div>
+                  <div class="avatar a2 sm">霞</div>
+                  <div class="avatar a3 sm">屿</div>
+                  <div class="avatar anon sm">?</div>
+                  <div class="avatar a4 sm">桥</div>
+                </div>
+                <span style="font-size:12px; color:var(--text-faint); margin-left:4px;">及其他 7 人</span>
+                <button class="btn btn-primary btn-sm" style="margin-left:auto;" onclick="showToast('报名成功，行前提醒邮件将于活动前一天发送')">一键报名</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card auto-email-card">
+            <div style="flex:1;">
+              <div class="settings-title">自动饭局提醒邮件</div>
+              <div class="settings-desc">开启后，每周三自动收到本周饭局主题、地点与一键报名邮件，不用记日程、不用蹲群消息。</div>
+            </div>
+            <div class="switch on" id="dinnerEmailSwitch" onclick="toggleDinnerEmail()"></div>
+          </div>
+
+          <div class="section-head"><h2>往期回顾</h2></div>
+          <div class="past-grid" id="pastGrid"></div>
+        </div>
+      </div>
+
+      <!-- ================= PROFILE ================= -->
+      <div class="view" id="view-profile">
+        <div class="view-wrap">
+          <div class="card profile-hero">
+            <div class="avatar a1" style="width:64px;height:64px;font-size:22px;">夜</div>
+            <div style="flex:1;">
+              <h2 style="font-size:19px;">夜航</h2>
+              <div style="color:var(--text-soft); font-size:13px; margin-top:3px;">科技行业 · 产品管理 · Mid-career</div>
+            </div>
+            <button class="btn btn-sm">编辑资料</button>
+          </div>
+
+          <div class="profile-stats">
+            <div class="card stat-card"><div class="stat-num num">386</div><div class="stat-label">总积分</div></div>
+            <div class="card stat-card"><div class="stat-num num">14</div><div class="stat-label">被采纳回答</div></div>
+            <div class="card stat-card"><div class="stat-num num">3</div><div class="stat-label">知识库收录</div></div>
+            <div class="card stat-card"><div class="stat-num num">5</div><div class="stat-label">参加饭局</div></div>
+          </div>
+
+          <div class="card" style="padding:18px 20px; margin-bottom:18px;">
+            <div class="section-head" style="margin-bottom:10px;"><h3 style="font-size:15px;">我的徽章</h3></div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <div class="chip" style="cursor:default;">🧭 导师</div>
+              <div class="chip" style="cursor:default;">✍️ 知识贡献者</div>
+              <div class="chip" style="cursor:default;">🌱 新人破冰</div>
+            </div>
+          </div>
+
+          <div class="card" style="padding:6px 20px;">
+            <div class="settings-row">
+              <div><div class="settings-title">默认匿名发帖</div><div class="settings-desc">开启后，发帖与回复默认使用匿名身份，可在发帖时临时切换。</div></div>
+              <div class="switch" id="defaultAnonSwitch" onclick="toggleEl('defaultAnonSwitch')"></div>
+            </div>
+            <div class="settings-row">
+              <div><div class="settings-title">开放接受 1:1 导师请求</div><div class="settings-desc">其他成员可以向你发起匿名或实名的 1:1 咨询请求。</div></div>
+              <div class="switch on" id="mentorOpenSwitch" onclick="toggleEl('mentorOpenSwitch')"></div>
+            </div>
+            <div class="settings-row">
+              <div><div class="settings-title">Weekly 饭局自动提醒</div><div class="settings-desc">每周三邮件提醒本周饭局主题与报名链接。</div></div>
+              <div class="switch on" id="profileDinnerSwitch" onclick="toggleEl('profileDinnerSwitch')"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  /* ---------------- data ---------------- */
+  const CAT_LABEL = { decision:'决策两难', conflict:'团队冲突', boss:'沟通与上级', present:'演讲教练', growth:'职场成长' };
+  const CAT_CLASS = { decision:'cat-decision', conflict:'cat-conflict', boss:'cat-boss', present:'cat-present', growth:'cat-growth' };
+
+  const posts = [
+    {
+      id:'p1', pinned:true, cat:'decision',
+      author:'匿名·观海', avatarClass:'anon', avatarText:'?', time:'2 天前',
+      title:'和 Skip 对齐解决了问题，Skip 给了我 credit，却没提我的 Direct——现在 Direct 开始给我使绊子，怎么办？',
+      snippet:'背景：一个跨组的老大难问题，我绕开了一些流程直接找 Skip 对齐拿到了资源，最后问题解决了。Skip 在全员会上表扬了我，但完全没提到我的 Direct manager。这周开始，我感觉 Direct 在 1:1 里明显开始挑我毛病、压我的 visibility……',
+      stats:{replies:34, likes:128},
+      body:`背景：一个跨组的老大难问题卡了两个季度，我判断走正常流程根本推不动，就直接找了 Skip（我 Direct 的老板）对齐了方案，拿到资源后把问题解决了。
+
+Skip 在全员会上点名表扬了我，但完全没提到我的 Direct。这周开始，我感觉 Direct 在 1:1 里明显开始挑我毛病、把一些原本会分给我的曝光机会拿走了。
+
+我知道自己当时的选择在流程上有点"跳级"，但事情紧急、Skip 也主动认可了。现在这个局面我该怎么破？是先找 Direct 谈，还是先观察，还是找 Skip 帮忙"背书"？`,
+      replies:[
+        { name:'制造业 VP · 导师', avatarClass:'a2', avatarText:'邓', mentor:true,
+          text:'先别等 Direct 先发难，主动约一个 1:1，把 credit 的归属讲清楚："这次是我们组一起推的，我知道自己跳过了一些流程，是因为时间紧张，之后类似情况我会先跟你对齐再上升"。核心是让 TA 感觉被尊重，而不是被跳过。' },
+        { name:'匿名·灯塔', avatarClass:'anon', avatarText:'?', mentor:false,
+          text:'我经历过几乎一样的场景。后来复盘发现，真正让局面缓和的是我主动把后续同类问题都抄送 Direct，让 TA 看到我没有把 Skip 当"跳过 TA 的捷径"，而是遇到卡点时的最后手段。' },
+        { name:'咨询行业 · 资深经理', avatarClass:'a3', avatarText:'林', mentor:false,
+          text:'也要考虑政治角度：Direct 可能担心的不是这一次的功劳，而是"以后遇到问题你会不会都跳过我"。所以谈话重点不是"分我的功劳"，而是"重建你对我按流程走的信任"。' }
+      ]
+    },
+    {
+      id:'p2', cat:'boss',
+      author:'匿名·潮汐', avatarClass:'anon', avatarText:'?', time:'5 小时前',
+      title:'我和老板的沟通出了问题，他总是刁难我，该怎么办？',
+      snippet:'最近几次汇报，老板总是用很挑剔的语气打断我，提一些我觉得不合理的问题，其他同事都说没有遇到这种情况……',
+      stats:{replies:21, likes:76},
+      body:`最近几次汇报，老板总是用很挑剔的语气打断我，提一些我觉得不太合理的问题，甚至当着其他人的面质疑我的判断。我观察了一下，其他同事好像没有遇到过这种待遇。
+
+我不确定这是针对我个人，还是他本身的沟通风格就是这样。想听听大家有没有类似的经历，怎么判断、怎么应对比较合适？`,
+      replies:[
+        { name:'匿名·雾灯', avatarClass:'anon', avatarText:'?', mentor:false,
+          text:'先做一个小范围的"侧写"：私下问 1-2 个信任的同事，他们汇报时老板是什么状态。如果只针对你，大概率是信任问题，需要主动找一次 1:1 直接问"最近的反馈感觉比较密集，是不是有什么具体的地方您不放心？"' },
+        { name:'金融行业 · 导师', avatarClass:'a2', avatarText:'许', mentor:true,
+          text:'刁难背后常见三种原因：ta 对你的产出没有安全感、ta 在向上受压把情绪带下来、或者纯粹沟通风格如此。先假设是第一种，用书面同步（邮件/文档）替代口头汇报，减少被临场"考问"的空间。' }
+      ]
+    },
+    {
+      id:'p3', cat:'conflict',
+      author:'匿名·灯塔', avatarClass:'anon', avatarText:'?', time:'昨天',
+      title:'组里两个同事意见不合吵起来了，作为旁观者我该怎么调解？',
+      snippet:'一个坚持按原计划上线，另一个坚持要延期做更多测试，两人在群里已经开始阴阳怪气了，我职级和他们差不多但大家都看着我表态……',
+      stats:{replies:15, likes:42},
+      body:`一个同事坚持按原计划上线，另一个坚持要延期做更多测试，两人在群里已经开始阴阳怪气了。我的职级和他们差不多，但因为我平时和两边关系都不错，大家似乎都在等我表态。
+
+我不想被卷入站队，但又觉得再拖下去团队氛围会更差。有没有什么框架可以既不站队又能推动问题解决？`,
+      replies:[
+        { name:'匿名·青枝', avatarClass:'anon', avatarText:'?', mentor:false,
+          text:'不要在群里回应，直接建议拉一个 15 分钟的三人同步，把"我们要不要延期"这个情绪化的问题，拆成"上线风险有多大 / 测试能覆盖多少 / 延期的成本是什么"三个事实问题分别过一遍。' },
+        { name:'团队管理 · 导师', avatarClass:'a4', avatarText:'霍', mentor:true,
+          text:'你的角色不是裁判，是主持人。可以说"我先不表态，我们先把风险列清楚，让数据说话"。如果还是僵持，就把决策升级给共同的老板，比强行调和更干净。' }
+      ]
+    },
+    {
+      id:'p4', cat:'present',
+      author:'王晓（实名）', avatarClass:'a3', avatarText:'王', time:'3 小时前',
+      title:'下周有个重要 Presentation（非敏感话题），想找人帮我 mock 一下，提提建议',
+      snippet:'内容是给管理层做的年度规划提案，想找 1-2 位愿意听我讲一遍、给反馈的伙伴，互相学习，也欢迎对提案内容感兴趣的朋友来听～',
+      stats:{replies:9, likes:30},
+      body:`下周三要给管理层做一个年度规划提案，属于比较重要但不涉密的内容。想找 1-2 位愿意听我讲一遍、给反馈的伙伴 mock 一下——结构是否清晰、节奏是否拖沓、被追问时我的应对是否得体。
+
+对听众来说，这个提案本身也会涉及一些跨行业都能用上的规划方法，欢迎感兴趣的朋友一起来"蹭听"，互相学习。` ,
+      replies:[
+        { name:'演讲教练徽章 · 匿名·苔原', avatarClass:'anon', avatarText:'?', mentor:true,
+          text:'我可以来听，周四晚上有空。建议先把开场的"一句话结论"打磨到 15 秒以内，管理层最容易在开场走神。' },
+        { name:'匿名·河堤', avatarClass:'anon', avatarText:'?', mentor:false,
+          text:'报名旁听～也可以顺便在知识库里搜"Presentation Mock三步法"，之前有一篇总结挺实用的。' }
+      ]
+    },
+    {
+      id:'p5', cat:'growth',
+      author:'匿名·远山', avatarClass:'anon', avatarText:'?', time:'4 天前',
+      title:'看了置顶那个 Direct/Skip 的例子，我是不是也该主动构建自己的 sponsor network？',
+      snippet:'一直觉得只要把事情做好，曝光和晋升自然会来，但最近发现同级别的人已经在有意识地维护几个"能在关键时刻为自己说话"的人……',
+      stats:{replies:12, likes:51},
+      body:`一直觉得只要把事情做好，曝光和晋升自然会来，比较排斥"经营人脉"这件事。但最近发现同级别的人已经在有意识地维护几个"能在关键时刻为自己说话"的人（sponsor），而不只是"愿意给建议"的人（mentor）。
+
+对于比较 i 人、不擅长主动社交的人，有没有相对不那么"用力"的方式去构建这种关系？`,
+      replies:[
+        { name:'导师 · 制造业 VP', avatarClass:'a2', avatarText:'邓', mentor:true,
+          text:'区分 mentor 和 sponsor 很关键：mentor 是"和你聊"，sponsor 是"帮你在你不在场的会议室里说话"。对 i 人来说，最省力的方式是把优质产出主动同步给 1-2 位你信任的高层，而不是硬社交。' }
+      ]
+    }
+  ];
+
+  const kbCards = [
+    { title:'当你的功劳被 Skip 认可，却被 Direct 视为威胁', tags:['组织政治'], points:['先假设对方在乎"信任链"而非"这一次的功劳"','主动约谈，明确后续同类情况的沟通路径','把 Skip 的认可转译成"团队的功劳"而非"个人跳级"'], source:'源自讨论 · 128 赞同 · 34 条回复' },
+    { title:'如何应对刁难型上级的沟通模式', tags:['沟通'], points:['先侧写：判断是针对个人还是普遍风格','用书面同步替代口头汇报，减少临场考问','直接询问具体顾虑，好过反复猜测'], source:'源自讨论 · 76 赞同 · 21 条回复' },
+    { title:'团队意见冲突的三种破局方式', tags:['团队管理'], points:['不做裁判，做主持人：把情绪问题拆成事实问题','拒绝在群聊里公开表态','僵持不下时，主动把决策升级给共同的上级'], source:'源自讨论 · 42 赞同 · 15 条回复' },
+    { title:'Presentation Mock 三步法', tags:['表达力'], points:['15 秒内讲清"一句话结论"','找 1-2 人预演，专盯"被追问时的反应"','录音回放，检查语速与填充词'], source:'源自讨论 · 30 赞同 · 9 条回复' },
+    { title:'内向者如何低成本构建 Sponsor Network', tags:['晋升'], points:['区分 mentor（给建议）与 sponsor（帮你说话）','把优质产出定期同步给 1-2 位信任的高层','借助线下饭局等轻量场合自然积累而非硬社交'], source:'源自讨论 · 51 赞同 · 12 条回复' },
+    { title:'第一次带新人融入团队的沟通清单', tags:['团队管理','沟通'], points:['入职第一周明确"找谁问什么问题"','用书面 FAQ 替代重复的口头答疑','两周后做一次非正式的双向反馈'], source:'源自讨论 · 19 赞同 · 6 条回复' }
+  ];
+
+  const badges = [
+    { emoji:'🧭', name:'导师', desc:'回答被采纳 10 次以上' },
+    { emoji:'🔥', name:'破冰达人', desc:'发起 5 次线下饭局' },
+    { emoji:'🎙️', name:'演讲教练', desc:'完成 3 次 Presentation Mock' },
+    { emoji:'✍️', name:'知识贡献者', desc:'内容被收录进知识库 3 次' },
+    { emoji:'🌱', name:'新人破冰', desc:'完成第一次发帖或参加第一次饭局' },
+    { emoji:'🧲', name:'年度冰箱贴', desc:'年度积分前列，兑换限定实体徽章' }
+  ];
+
+  const lbData = {
+    week:[
+      {name:'邓明（制造业 VP）', avatarClass:'a2', avatarText:'邓', industry:'制造业', badges:['🧭','✍️'], points:210},
+      {name:'匿名·苔原', avatarClass:'anon', avatarText:'?', industry:'咨询', badges:['🎙️'], points:186},
+      {name:'夜航（我）', avatarClass:'a1', avatarText:'夜', industry:'科技', badges:['🧭','✍️','🌱'], points:154},
+      {name:'许薇（金融）', avatarClass:'a3', avatarText:'许', industry:'金融', badges:['🧭'], points:132},
+      {name:'匿名·青枝', avatarClass:'anon', avatarText:'?', industry:'医疗', badges:['🔥'], points:98}
+    ],
+    month:[
+      {name:'夜航（我）', avatarClass:'a1', avatarText:'夜', industry:'科技', badges:['🧭','✍️','🌱'], points:386},
+      {name:'邓明（制造业 VP）', avatarClass:'a2', avatarText:'邓', industry:'制造业', badges:['🧭','✍️'], points:340},
+      {name:'林薇（咨询）', avatarClass:'a3', avatarText:'林', industry:'咨询', badges:['🎙️','🔥'], points:301},
+      {name:'匿名·灯塔', avatarClass:'anon', avatarText:'?', industry:'团队管理', badges:['🔥'], points:220},
+      {name:'霍靖（团队管理）', avatarClass:'a4', avatarText:'霍', industry:'零售', badges:['🧭'], points:190}
+    ],
+    year:[
+      {name:'邓明（制造业 VP）', avatarClass:'a2', avatarText:'邓', industry:'制造业', badges:['🧭','✍️','🧲'], points:2140},
+      {name:'林薇（咨询）', avatarClass:'a3', avatarText:'林', industry:'咨询', badges:['🎙️','🔥','🧲'], points:1980},
+      {name:'夜航（我）', avatarClass:'a1', avatarText:'夜', industry:'科技', badges:['🧭','✍️','🌱'], points:1720},
+      {name:'许薇（金融）', avatarClass:'a3', avatarText:'许', industry:'金融', badges:['🧭'], points:1510},
+      {name:'匿名·苔原', avatarClass:'anon', avatarText:'?', industry:'咨询', badges:['🎙️'], points:1332}
+    ]
+  };
+
+  const pastDinners = [
+    { theme:'医疗 × 科技：跨界的产品思维', people:14, quote:'"第一次跟完全不同行业的人聊 roadmap，发现很多套路是相通的。"' },
+    { theme:'新人专场：如何在头 90 天建立信任', people:18, quote:'"比读十篇文章都有用，直接问到了我最卡的问题。"' },
+    { theme:'管理者夜话：向上管理的边界感', people:11, quote:'"终于有地方能小声吐槽又不怕被记小本本。"' }
+  ];
+
+  const conversations = {
+    dm:[
+      { id:'m1', name:'邓明（制造业 VP · 🧭 导师）', avatarClass:'a2', avatarText:'邓', preview:'那次跟 Direct 的谈话，后来怎么样了？', note:'', msgs:[
+          {from:'them', text:'那次跟 Direct 的谈话，后来怎么样了？'},
+          {from:'me', text:'约了一次 1:1，按你说的先认可再重建信任，感觉缓和了不少，谢谢！'},
+          {from:'them', text:'不客气，记得后续同类的事提前抄送 ta，别让信任再掉下去。'}
+        ]},
+      { id:'m2', name:'匿名用户 · 请求 1:1', avatarClass:'anon', avatarText:'?', preview:'想匿名请教一个职场政治问题…', note:'这是一条匿名 1:1 咨询请求，对方的身份仅对你不可见，你的回复也可选择匿名。', msgs:[
+          {from:'them', text:'你好，看到你之前分享的 sponsor network 的思路，想匿名请教一个类似的问题，方便吗？'}
+        ]},
+      { id:'m3', name:'王晓', avatarClass:'a3', avatarText:'王', preview:'谢谢你周四来听我 mock！', note:'', msgs:[
+          {from:'them', text:'谢谢你周四来听我 mock！开场那段真的顺多了。'},
+          {from:'me', text:'讲得很好，追问环节的临场反应也比上次稳很多。'}
+        ]}
+    ],
+    group:[
+      { id:'g1', name:'科技行业交流群 · 214 人', avatarClass:'a1', avatarText:'科', preview:'匿名·河堤：这周饭局谁去？', note:'', msgs:[
+          {from:'them', text:'匿名·河堤：这周饭局谁去？'},
+          {from:'them', text:'林薇：我报名了，顺便带一个刚转行来的朋友～'}
+        ]},
+      { id:'g2', name:'Presentation Coach 陪练群 · 58 人', avatarClass:'a4', avatarText:'练', preview:'苔原：本周三晚有人练 demo 吗？', note:'', msgs:[
+          {from:'them', text:'苔原：本周三晚有人练 demo 吗？'}
+        ]}
+    ]
+  };
+
+  /* ---------------- render: feed ---------------- */
+  function renderFeed(filter){
+    const list = document.getElementById('feedList');
+    const items = posts.filter(p => filter==='all' || p.cat===filter);
+    list.innerHTML = items.map(p => `
+      <div class="card post-card" onclick="openThread('${p.id}')">
+        <div class="post-top">
+          <div class="avatar ${p.avatarClass}">${p.avatarText}</div>
+          <div style="flex:1; min-width:0;">
+            <div class="post-meta-line">
+              ${p.pinned ? '<span class="tag pinned">高热度</span>' : ''}
+              <span class="tag ${CAT_CLASS[p.cat]}">${CAT_LABEL[p.cat]}</span>
+              <span class="post-author">${p.author}</span>
+              <span class="post-time">· ${p.time}</span>
+            </div>
+            <div class="post-title">${p.title}</div>
+            <div class="post-snippet">${p.snippet}</div>
+            <div class="post-stats">
+              <span>💬 ${p.stats.replies} 回复</span>
+              <span>👍 ${p.stats.likes}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  document.getElementById('catChips').addEventListener('click', e=>{
+    const chip = e.target.closest('.chip');
+    if(!chip) return;
+    document.querySelectorAll('#catChips .chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    renderFeed(chip.dataset.cat);
+  });
+
+  /* ---------------- render: thread ---------------- */
+  function openThread(id){
+    const p = posts.find(x=>x.id===id);
+    const el = document.getElementById('threadContent');
+    el.innerHTML = `
+      <div class="card thread-op">
+        <div class="post-top">
+          <div class="avatar ${p.avatarClass}">${p.avatarText}</div>
+          <div style="flex:1;">
+            <div class="post-meta-line">
+              <span class="tag ${CAT_CLASS[p.cat]}">${CAT_LABEL[p.cat]}</span>
+              <span class="post-author">${p.author}</span>
+              <span class="post-time">· ${p.time}</span>
+            </div>
+            <h2 style="font-size:18px;">${p.title}</h2>
+          </div>
+        </div>
+        <div class="thread-body">${p.body}</div>
+        <div class="post-stats" style="margin-top:16px;">
+          <span>💬 ${p.stats.replies} 回复</span>
+          <span>👍 ${p.stats.likes}</span>
+          <span style="margin-left:auto; cursor:pointer; color:var(--accent-strong); font-weight:600;" onclick="showToast('已收录进你的知识库收藏')">＋ 收藏到知识库</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="replies-wrap" id="repliesWrap">
+          ${p.replies.map(r=>`
+            <div class="reply-item ${r.mentor?'mentor':''}">
+              <div class="avatar ${r.avatarClass} sm">${r.avatarText}</div>
+              <div style="flex:1;">
+                <div class="reply-head">
+                  <span class="reply-name">${r.name}</span>
+                  ${r.mentor?'<span class="mentor-flag">导师建议</span>':''}
+                </div>
+                <div class="reply-text">${r.text}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="composer">
+          <textarea id="replyBox" placeholder="分享你的建议或类似经历…"></textarea>
+          <div class="composer-row">
+            <label class="checkbox-line"><input type="checkbox" id="replyAnon" ${anonMode?'checked':''}/> 匿名回复</label>
+            <button class="btn btn-primary btn-sm" style="margin-left:auto;" onclick="submitReply('${p.id}')">发布回复</button>
+          </div>
+        </div>
+      </div>
+    `;
+    goView('thread');
+  }
+
+  function submitReply(id){
+    const box = document.getElementById('replyBox');
+    if(!box.value.trim()) return;
+    const anon = document.getElementById('replyAnon').checked;
+    const wrap = document.getElementById('repliesWrap');
+    wrap.insertAdjacentHTML('beforeend', `
+      <div class="reply-item">
+        <div class="avatar ${anon?'anon':'a1'} sm">${anon?'?':'夜'}</div>
+        <div style="flex:1;">
+          <div class="reply-head"><span class="reply-name">${anon?'匿名·你':'夜航'}</span></div>
+          <div class="reply-text">${box.value.trim()}</div>
+        </div>
+      </div>
+    `);
+    box.value='';
+    showToast('回复已发布');
+  }
+
+  /* ---------------- render: knowledge base ---------------- */
+  function renderKB(filter){
+    const grid = document.getElementById('kbGrid');
+    const items = kbCards.filter(k => filter==='all' || k.tags.includes(filter));
+    grid.innerHTML = items.map(k=>`
+      <div class="card kb-card">
+        <div class="kb-tags">${k.tags.map(t=>`<span class="tag cat-growth">${t}</span>`).join('')}</div>
+        <h3>${k.title}</h3>
+        <ul class="kb-points">${k.points.map(pt=>`<li>${pt}</li>`).join('')}</ul>
+        <div class="kb-source">${k.source}</div>
+      </div>
+    `).join('');
+  }
+  document.getElementById('kbChips').addEventListener('click', e=>{
+    const chip = e.target.closest('.chip');
+    if(!chip) return;
+    document.querySelectorAll('#kbChips .chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    renderKB(chip.dataset.tag);
+  });
+
+  /* ---------------- render: leaderboard ---------------- */
+  function renderLB(period){
+    const body = document.getElementById('lbBody');
+    body.innerHTML = lbData[period].map((r,i)=>`
+      <tr>
+        <td><span class="rank-num num">${i+1}</span></td>
+        <td>
+          <div class="lb-name-row">
+            <div class="avatar ${r.avatarClass} sm">${r.avatarText}</div>
+            <span style="font-weight:600;">${r.name}</span>
+          </div>
+        </td>
+        <td style="color:var(--text-soft);">${r.industry}</td>
+        <td><div class="lb-badges">${r.badges.map(b=>`<span>${b}</span>`).join('')}</div></td>
+        <td style="text-align:right;"><span class="lb-points num">${r.points}</span></td>
+      </tr>
+    `).join('');
+  }
+  document.querySelectorAll('.lb-tabs .chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      document.querySelectorAll('.lb-tabs .chip').forEach(c=>c.classList.remove('active'));
+      chip.classList.add('active');
+      renderLB(chip.dataset.lb);
+    });
+  });
+  function renderBadges(){
+    document.getElementById('badgeGrid').innerHTML = badges.map(b=>`
+      <div class="card badge-card">
+        <div class="badge-emoji">${b.emoji}</div>
+        <div><h4>${b.name}</h4><p>${b.desc}</p></div>
+      </div>
+    `).join('');
+  }
+
+  /* ---------------- render: dinner ---------------- */
+  function renderPastDinners(){
+    document.getElementById('pastGrid').innerHTML = pastDinners.map((d,i)=>`
+      <div class="card past-card">
+        <div class="past-photo" style="background:linear-gradient(135deg, hsl(${28+i*40} 55% ${86-i*4}%), hsl(${28+i*40} 45% ${68-i*4}%));"></div>
+        <div class="past-body">
+          <div style="font-weight:700; font-size:13.5px;">${d.theme}</div>
+          <div style="font-size:12px; color:var(--text-faint); margin-top:3px;">${d.people} 人参加</div>
+          <div class="past-quote">${d.quote}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  /* ---------------- render: messages ---------------- */
+  let activeConv = 'm1';
+  function renderConvList(){
+    const el = document.getElementById('convList');
+    const row = (c, list) => `
+      <div class="conv-item ${activeConv===c.id?'active':''}" onclick="openConv('${c.id}','${list}')">
+        <div class="avatar ${c.avatarClass} sm">${c.avatarText}</div>
+        <div style="min-width:0;">
+          <div class="conv-name">${c.name}</div>
+          <div class="conv-preview">${c.preview}</div>
+        </div>
+      </div>`;
+    el.innerHTML =
+      `<div class="conv-section-label">1 : 1 私信</div>` +
+      conversations.dm.map(c=>row(c,'dm')).join('') +
+      `<div class="conv-section-label">群聊</div>` +
+      conversations.group.map(c=>row(c,'group')).join('');
+  }
+  function findConv(id){
+    return conversations.dm.find(c=>c.id===id) || conversations.group.find(c=>c.id===id);
+  }
+  function openConv(id){
+    activeConv = id;
+    renderConvList();
+    const c = findConv(id);
+    document.getElementById('chatHeader').innerHTML = `
+      <div class="avatar ${c.avatarClass} sm">${c.avatarText}</div>
+      <div style="font-weight:700; font-size:13.5px;">${c.name}</div>
+    `;
+    document.getElementById('chatBody').innerHTML = c.msgs.map(m=>`<div class="bubble ${m.from==='me'?'me':'them'}">${m.text}</div>`).join('');
+    document.getElementById('chatReqNote').textContent = c.note || '';
+    document.getElementById('chatBody').scrollTop = 999999;
+  }
+  function sendChat(){
+    const input = document.getElementById('chatInput');
+    if(!input.value.trim()) return;
+    const c = findConv(activeConv);
+    c.msgs.push({from:'me', text: input.value.trim()});
+    input.value='';
+    openConv(activeConv);
+  }
+
+  /* ---------------- nav / view switching ---------------- */
+  const VIEW_TITLES = { feed:'讨论广场', thread:'讨论详情', messages:'私信与群聊', kb:'知识库', leaderboard:'排行榜 & 徽章', dinner:'Weekly 饭局', profile:'我的主页' };
+  function goView(name){
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    document.getElementById('view-'+name).classList.add('active');
+    document.querySelectorAll('.nav-item[data-view]').forEach(n=>n.classList.toggle('active', n.dataset.view===name));
+    document.getElementById('view-title').textContent = VIEW_TITLES[name] || '';
+    document.querySelector('.content').scrollTop = 0;
+  }
+  document.querySelectorAll('[data-view]').forEach(el=>{
+    el.addEventListener('click', ()=>goView(el.dataset.view));
+  });
+
+  /* ---------------- toggles ---------------- */
+  let anonMode = false;
+  function toggleAnon(){
+    anonMode = !anonMode;
+    document.getElementById('anonSwitch').classList.toggle('on', anonMode);
+    showToast(anonMode ? '匿名模式已开启，发帖与回复默认隐藏身份' : '匿名模式已关闭');
+  }
+  function toggleDinnerEmail(){
+    const el = document.getElementById('dinnerEmailSwitch');
+    const on = el.classList.toggle('on');
+    showToast(on ? '已开启自动饭局提醒邮件' : '已关闭自动饭局提醒邮件');
+  }
+  function toggleEl(id){
+    document.getElementById(id).classList.toggle('on');
+  }
+
+  function showToast(text){
+    const t = document.getElementById('toast');
+    t.textContent = text;
+    t.classList.add('show');
+    clearTimeout(showToast._tm);
+    showToast._tm = setTimeout(()=>t.classList.remove('show'), 2200);
+  }
+
+  /* ---------------- init ---------------- */
+  renderFeed('all');
+  renderKB('all');
+  renderLB('week');
+  renderBadges();
+  renderPastDinners();
+  renderConvList();
+  openConv('m1');
+</script>
