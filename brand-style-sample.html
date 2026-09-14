@@ -36,6 +36,22 @@
     }
     .toggle:hover { border-color:var(--brand); color:var(--brand); }
 
+    /* ---- 为什么 ---- */
+    .why { display:grid; grid-template-columns:1fr 1fr; gap:0 34px; }
+    .why-item { padding:15px 0; border-top:1px solid var(--border-soft); }
+    .why-head { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:650; }
+    .why-item p { margin:6px 0 0; color:var(--text-soft); font-size:12.5px; line-height:1.75; }
+    .why-item strong { color:var(--text); }
+    .dot { width:9px; height:9px; border-radius:50%; flex:none; }
+    .dot.neutral  { background:var(--text-soft); }
+    .dot.bg       { background:var(--bg); border:1px solid var(--border); }
+    .dot.brand    { background:var(--brand); }
+    .dot.insight  { background:var(--insight); }
+    .dot.verified { background:var(--verified); }
+    .dot.faint    { background:var(--text-faint); }
+    .dot.border   { background:var(--border); }
+    .dot.chrome   { background:var(--chrome); }
+
     /* ---- 色板 ---- */
     .group { margin-bottom:6px; }
     .swatches { display:grid; grid-template-columns:repeat(auto-fill,minmax(196px,1fr)); gap:10px; }
@@ -117,7 +133,7 @@
 
     @media(max-width:760px) {
       body { padding:32px 16px 64px; }
-      .examples, .hier { grid-template-columns:1fr; }
+      .why, .examples, .hier { grid-template-columns:1fr; }
       .top { flex-direction:column; }
     }
   </style>
@@ -139,7 +155,92 @@
   </div>
 
   <section>
-    <h2>一 · 令牌</h2>
+    <h2>一 · 为什么是这套配色</h2>
+    <p class="sec-note">
+      这一节比后面的规则更重要。规则会在赶进度时被绕过，理由能让人自己判断该不该绕。
+    </p>
+
+    <div class="why">
+      <div class="why-item">
+        <div class="why-head"><span class="dot neutral"></span>整体低饱和、中性主导</div>
+        <p>
+          用户是带着「进退两难的具体决策」来的，打开产品时通常正焦虑。高饱和、社交平台式的活跃配色会加剧焦虑，
+          也会让「认真求助」显得轻浮。而且这是纯文本产品（文档明确不做图片视频），唯一的主角只能是文字——
+          配色的任务是<strong>退让</strong>，不是表现。克制也不只是审美：每多一个色相，
+          就多出一批「这里该用哪个」的判断点，而它们会由不同的人在不同时间做出，必然分叉。
+        </p>
+      </div>
+
+      <div class="why-item">
+        <div class="why-head"><span class="dot bg"></span>暖灰纸感，而不是纯白</div>
+        <p>
+          核心行为是读长回答，纯白底长时间阅读会累。纯白同时也是企业软件的默认底色，会让产品显得冰冷、
+          像内部 HR 系统；而这是一个邀请制<strong>社群</strong>，需要人情味。暖灰带来纸的联想——档案、笔记、案例集，
+          正好对应「沉淀成可复用的判断力」这个定位。但暖度压到极低（与纯白只差 1.09:1），再重就显得复古廉价。
+        </p>
+      </div>
+
+      <div class="why-item">
+        <div class="why-head"><span class="dot brand"></span>品牌色选深青蓝</div>
+        <p>
+          蓝色系保留职场产品不能丢的专业与可信。但必须避开知乎蓝与 LinkedIn 蓝：一是辨识度，用了就像在模仿；
+          二是那种亮蓝传递的是「活跃、社交、快点我」，与「冷静想清楚」正好相反。掺入青绿让它降温变沉稳，
+          而青绿关联安全感与被保护，对「匿名讲职场困境」是对的。选深不选亮还有个务实理由：
+          够深才能直接承载白字（8.31:1），做主按钮不必再调一个颜色。
+        </p>
+      </div>
+
+      <div class="why-item">
+        <div class="why-head"><span class="dot insight"></span>琥珀只标注价值，不参与交互</div>
+        <p>
+          琥珀与金色关联「洞察」「想明白的那一刻」「值得收藏」，正好对应知识库沉淀与加精。
+          它必须和交互色分开：如果琥珀既表示「这段值得读」又表示「点这里」，
+          用户就无法判断该读还是该点——<strong>一个颜色只能有一个含义</strong>。
+          它和暖灰底同属暖色，所以加精区用琥珀浅底不会像贴上去的贴纸。
+          它不能做文字是物理限制：琥珀够亮才像「金」，够亮就必然对比度不足（上一版白字配琥珀只有 2.98:1）。
+        </p>
+      </div>
+
+      <div class="why-item">
+        <div class="why-head"><span class="dot verified"></span>状态色不复用品牌色</div>
+        <p>
+          状态色的含义必须稳定。如果用品牌色表示「已认证」，那么品牌色出现在链接和按钮上时，
+          用户会误读成状态。绿=已核实、红=有风险是既有的跨文化约定，重新发明只会增加认知成本。
+          两者都做了降饱和，目的是让它们读起来像<strong>状态标记</strong>而不是警报。
+        </p>
+      </div>
+
+      <div class="why-item">
+        <div class="why-head"><span class="dot faint"></span>未认证不给颜色</div>
+        <p>
+          文档规定默认全员未认证、管理员只做事后抽查，所以未认证不是异常状态，而是<strong>最常见的状态</strong>。
+          给最常见的状态配警示色有两个后果：警示色会失效（狼来了），以及整个社区被渲染成不可信。
+          中性灰的「自报」二字同样能完成「提示读者自行判断」，且不带指责。
+        </p>
+      </div>
+
+      <div class="why-item">
+        <div class="why-head"><span class="dot border"></span>分类不给颜色</div>
+        <p>
+          五个分类各给一色就是五个新色相，加上四个语义色等于九个色相同屏竞争，任何层次都会消失。
+          而且分类之间是平级关系，用颜色区分反而暗示了优先级高低。
+          「决策两难」「团队冲突」这些名字本身已经高度自解释，颜色提供不了额外信息。
+        </p>
+      </div>
+
+      <div class="why-item">
+        <div class="why-head"><span class="dot chrome"></span>深色模式用暖调深色，不用蓝黑</div>
+        <p>
+          温度是这套系统的识别特征，不能只在浅色模式下存在。浅色用暖灰、深色却切到蓝黑，
+          是最常见的不一致来源——会让同一个产品在两个模式下像两个产品。
+          可以点右上角切换，对照看一下这份文档本身。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>二 · 令牌</h2>
     <p class="sec-note">
       每个令牌都带一条使用规则。规则是这套系统真正的价值——颜色本身谁都能挑，
       难的是限定它只能出现在哪里。
@@ -148,7 +249,7 @@
   </section>
 
   <section>
-    <h2>二 · 身份状态：默认状态必须是安静的</h2>
+    <h2>三 · 身份状态：默认状态必须是安静的</h2>
     <p class="sec-note">
       产品文档规定身份默认全员未认证、管理员只做事后抽查。这意味着上线首日几乎每个用户名旁都会出现这个标记。
       所以「未认证」<strong>不给颜色</strong>——用中性灰写「自报」；「已认证」才用青玉色，且只做小图标加文字。
@@ -192,7 +293,7 @@
   </section>
 
   <section>
-    <h2>三 · 分类不分配颜色</h2>
+    <h2>四 · 分类不分配颜色</h2>
     <p class="sec-note">
       五个分类（决策两难 / 团队冲突 / 沟通与上级 / 演讲教练 / 职场成长）如果各给一个色相，
       界面会立刻变成彩虹，并且和四个语义色打架。分类靠<strong>文字本身</strong>区分，
@@ -223,7 +324,7 @@
   </section>
 
   <section>
-    <h2>四 · 交互只有一个颜色</h2>
+    <h2>五 · 交互只有一个颜色</h2>
     <p class="sec-note">
       链接、主按钮、选中态、焦点环全部用深青蓝。琥珀色<strong>不承担交互</strong>——
       它只标注「值得一读」，不代表「点这里」。破坏性操作用砖红描边，但不做实心块。
@@ -246,7 +347,7 @@
   </section>
 
   <section>
-    <h2>五 · 文字层级</h2>
+    <h2>六 · 文字层级</h2>
     <p class="sec-note">三级到顶。第四级必然低于 4.5:1，不要发明。</p>
     <div class="hier">
       <div>
@@ -265,7 +366,7 @@
   </section>
 
   <section>
-    <h2>六 · 相比上一版删掉了什么</h2>
+    <h2>七 · 相比上一版删掉了什么</h2>
     <ul class="removed">
       <li><strong>「60% / 25% / 10% / 5%」配色比例条</strong>——暖灰与白的对比度只有 1.09，肉眼分不出，是一条无法验收的规则。改成一句能执行的话：页面用 <code>--bg</code>，卡片用 <code>--surface</code>，靠 1px <code>--border</code> 分层。</li>
       <li><strong>衬线备选方案</strong>——只保留一套无衬线。衬线仅限营销落地页，不进产品界面。</li>
