@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Situational Awareness · 色板规范</title>
+  <link rel="stylesheet" href="design-tokens.css">
+  <style>
+    /* 这个文件里不允许出现任何硬编码颜色。全部来自 design-tokens.css。 */
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      padding:48px 28px 96px;
+      background:var(--bg);
+      color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Noto Sans SC",sans-serif;
+      font-size:14px;
+      line-height:1.6;
+      -webkit-font-smoothing:antialiased;
+    }
+    main { width:min(1000px,100%); margin:auto; }
+
+    .top { display:flex; align-items:flex-start; justify-content:space-between; gap:24px; }
+    .overline { color:var(--brand); font-size:11px; font-weight:700; letter-spacing:.16em; }
+    h1 { margin:8px 0 6px; font-size:28px; letter-spacing:-.5px; }
+    .intro { margin:0; max-width:62ch; color:var(--text-soft); }
+    h2 { margin:0 0 4px; font-size:15px; }
+    .sec-note { margin:0 0 18px; color:var(--text-soft); font-size:13px; max-width:74ch; }
+    section { margin-top:40px; padding-top:26px; border-top:1px solid var(--border); }
+    h3 { margin:26px 0 10px; font-size:12px; font-weight:700; letter-spacing:.08em; color:var(--text-faint); text-transform:uppercase; }
+
+    .toggle {
+      flex:none; padding:6px 13px; border-radius:6px; cursor:pointer;
+      border:1px solid var(--border); background:var(--surface); color:var(--text-soft);
+      font-family:inherit; font-size:12px;
+    }
+    .toggle:hover { border-color:var(--brand); color:var(--brand); }
+
+    /* ---- 色板 ---- */
+    .group { margin-bottom:6px; }
+    .swatches { display:grid; grid-template-columns:repeat(auto-fill,minmax(196px,1fr)); gap:10px; }
+    .sw { border:1px solid var(--border); border-radius:7px; overflow:hidden; background:var(--surface); }
+    .sw-chip { height:60px; border-bottom:1px solid var(--border); }
+    .sw-meta { padding:9px 11px 11px; }
+    .sw-name { font-size:12px; font-weight:600; }
+    .sw-hex { margin-top:1px; font:11px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace; color:var(--text-faint); }
+    .sw-rule { margin-top:5px; font-size:11px; line-height:1.55; color:var(--text-soft); }
+
+    /* ---- 规则表 ---- */
+    table { width:100%; border-collapse:collapse; font-size:13px; }
+    th { text-align:left; padding:8px 12px; font-size:11px; font-weight:700; letter-spacing:.06em;
+         color:var(--text-faint); text-transform:uppercase; border-bottom:1px solid var(--border); }
+    td { padding:10px 12px; border-bottom:1px solid var(--border-soft); vertical-align:top; color:var(--text-soft); }
+    td:first-child { color:var(--text); font-weight:600; white-space:nowrap; }
+    tr:last-child td { border-bottom:none; }
+
+    /* ---- 内容对象示例 ---- */
+    .examples { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:16px 18px; }
+    .card-label { font-size:11px; color:var(--text-faint); margin-bottom:12px; }
+    .post-title { font-size:16px; font-weight:650; margin:0 0 6px; }
+    .byline { display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:12px; color:var(--text-faint); }
+    .avatar { width:26px; height:26px; border-radius:50%; flex:none;
+              background:var(--brand-tint); color:var(--brand);
+              display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; }
+    .avatar.anon { background:var(--surface-sunken); color:var(--text-faint); border:1px solid var(--border); }
+    .name { color:var(--text); font-weight:600; }
+    .role { color:var(--text-soft); }
+    .verified { color:var(--verified); font-weight:600; display:inline-flex; align-items:center; gap:3px; }
+    .self-reported { color:var(--text-faint); }
+    .cat { padding:2px 8px; border:1px solid var(--border); border-radius:11px; color:var(--text-faint); font-size:11px; }
+    .cat.on { background:var(--brand-tint); border-color:var(--brand-tint); color:var(--brand); font-weight:600; }
+
+    .insight-card { border-left:3px solid var(--insight); background:var(--insight-tint);
+                    border-radius:0 7px 7px 0; padding:13px 15px; }
+    .insight-kicker { font-size:10px; font-weight:700; letter-spacing:.1em;
+                      color:var(--insight-text); text-transform:uppercase; }
+    .insight-body { margin:5px 0 0; color:var(--insight-text); font-size:14px; }
+
+    .risk { display:flex; gap:9px; background:var(--risk-tint); border-radius:7px; padding:11px 13px; }
+    .risk-mark { color:var(--risk); font-weight:700; flex:none; }
+    .risk-body { color:var(--risk); font-size:13px; }
+
+    .private { border:1px dashed var(--border); border-radius:7px; padding:11px 13px; background:var(--surface-sunken); }
+    .private-tag { font-size:10px; font-weight:700; letter-spacing:.08em; color:var(--text-faint); text-transform:uppercase; }
+
+    .btn-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+    .btn { padding:7px 15px; border-radius:6px; font-size:13px; font-family:inherit; cursor:pointer; border:1px solid transparent; }
+    .btn.primary { background:var(--brand); color:var(--text-on-fill); }
+    .btn.primary:hover { background:var(--brand-hover); }
+    .btn.secondary { background:var(--surface); border-color:var(--border); color:var(--text); }
+    .btn.secondary:hover { border-color:var(--brand); color:var(--brand); }
+    .btn.ghost { background:transparent; color:var(--text-soft); }
+    .btn.ghost:hover { color:var(--brand); }
+    .btn.danger { background:transparent; border-color:var(--border); color:var(--risk); }
+    a.link { color:var(--brand); text-decoration:none; border-bottom:1px solid var(--brand-tint); }
+
+    /* ---- 深色导航区 ---- */
+    .chrome-demo { background:var(--chrome); border-radius:8px; padding:14px 12px; max-width:260px; }
+    .chrome-brand { color:var(--chrome-text); font-size:14px; font-weight:650; padding:2px 10px 14px; }
+    .chrome-brand span { display:block; color:var(--chrome-text-dim); font-size:11px; font-weight:400; margin-top:2px; }
+    .chrome-item { display:flex; align-items:center; justify-content:space-between;
+                   padding:9px 10px; border-radius:6px; color:var(--chrome-text); font-size:13px; }
+    .chrome-item.on { background:var(--chrome-hover); }
+    .chrome-item .dim { color:var(--chrome-text-dim); font-size:11px; }
+
+    /* ---- 层级 ---- */
+    .hier { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+    .hier > div { padding-left:13px; border-left:2px solid var(--border); }
+    .hier small { display:block; color:var(--text-faint); font-size:10px; letter-spacing:.05em; }
+    .t1 { margin:6px 0 0; font-size:17px; font-weight:650; color:var(--text); }
+    .t2 { margin:6px 0 0; font-size:14px; color:var(--text-soft); }
+    .t3 { margin:6px 0 0; font-size:11px; color:var(--text-faint); }
+
+    .removed li { margin-bottom:9px; color:var(--text-soft); font-size:13px; }
+    .removed strong { color:var(--text); }
+
+    @media(max-width:760px) {
+      body { padding:32px 16px 64px; }
+      .examples, .hier { grid-template-columns:1fr; }
+      .top { flex-direction:column; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <div class="top">
+    <div>
+      <div class="overline">SITUATIONAL AWARENESS</div>
+      <h1>色板规范</h1>
+      <p class="intro">
+        四个色相，其余全是中性色：<strong>深青蓝</strong>（品牌与全部交互）·
+        <strong>琥珀</strong>（洞察与加精）· <strong>青玉</strong>（已认证）·
+        <strong>砖红</strong>（仅真实风险）。界面上 95% 的面积应该只有中性色。
+        所有取值来自 <code>design-tokens.css</code>，本页的色值由脚本实时读取，不会与令牌脱节。
+      </p>
+    </div>
+    <button class="toggle" id="themeToggle" type="button">切换深色</button>
+  </div>
+
+  <section>
+    <h2>一 · 令牌</h2>
+    <p class="sec-note">
+      每个令牌都带一条使用规则。规则是这套系统真正的价值——颜色本身谁都能挑，
+      难的是限定它只能出现在哪里。
+    </p>
+    <div id="palette"></div>
+  </section>
+
+  <section>
+    <h2>二 · 身份状态：默认状态必须是安静的</h2>
+    <p class="sec-note">
+      产品文档规定身份默认全员未认证、管理员只做事后抽查。这意味着上线首日几乎每个用户名旁都会出现这个标记。
+      所以「未认证」<strong>不给颜色</strong>——用中性灰写「自报」；「已认证」才用青玉色，且只做小图标加文字。
+      砖红留给真正的风险，不参与身份标注。
+    </p>
+    <div class="examples">
+      <div class="card">
+        <div class="card-label">已认证 · 管理员核实过</div>
+        <div class="byline">
+          <span class="avatar">邓</span>
+          <span class="name">邓明</span>
+          <span class="role">制造业 VP · 导师</span>
+          <span class="verified">✓ 已认证</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">未认证 · 自报信息（默认态）</div>
+        <div class="byline">
+          <span class="avatar">许</span>
+          <span class="name">许静</span>
+          <span class="role">金融 · 领航 2022 届</span>
+          <span class="self-reported">自报</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">匿名发帖 · 不显示身份标签、头像不可点</div>
+        <div class="byline">
+          <span class="avatar anon">?</span>
+          <span class="name">匿名 · 观海</span>
+          <span>2 小时前</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">真实风险 · 砖红只出现在这里</div>
+        <div class="risk">
+          <span class="risk-mark">!</span>
+          <span class="risk-body">这条内容已被 3 人举报，正在复核。</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>三 · 分类不分配颜色</h2>
+    <p class="sec-note">
+      五个分类（决策两难 / 团队冲突 / 沟通与上级 / 演讲教练 / 职场成长）如果各给一个色相，
+      界面会立刻变成彩虹，并且和四个语义色打架。分类靠<strong>文字本身</strong>区分，
+      标签统一用中性描边；只有当前选中项用品牌浅色底强调。
+    </p>
+    <div class="btn-row">
+      <span class="cat on">全部</span>
+      <span class="cat">决策两难</span>
+      <span class="cat">团队冲突</span>
+      <span class="cat">沟通与上级</span>
+      <span class="cat">演讲教练</span>
+      <span class="cat">职场成长</span>
+    </div>
+
+    <h3>加精 / 知识库沉淀</h3>
+    <div class="insight-card">
+      <div class="insight-kicker">已加精 · 沉淀为案例 024</div>
+      <p class="insight-body">先验证，不急着承诺。跨部门项目的真实成本在协调权，不在工作量。</p>
+    </div>
+
+    <h3>私密联系方式 · 仅提问人可见</h3>
+    <div class="private">
+      <div class="private-tag">仅你可见</div>
+      <p style="margin:5px 0 0; color:var(--text-soft); font-size:13px;">
+        这位回答者留了联系方式给你，其他读者看不到这一段。
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>四 · 交互只有一个颜色</h2>
+    <p class="sec-note">
+      链接、主按钮、选中态、焦点环全部用深青蓝。琥珀色<strong>不承担交互</strong>——
+      它只标注「值得一读」，不代表「点这里」。破坏性操作用砖红描边，但不做实心块。
+    </p>
+    <div class="btn-row">
+      <button class="btn primary" type="button">发布提问</button>
+      <button class="btn secondary" type="button">存草稿</button>
+      <button class="btn ghost" type="button">取消</button>
+      <button class="btn danger" type="button">删除</button>
+      <a class="link" href="#">查看原讨论</a>
+    </div>
+
+    <h3>深色导航区</h3>
+    <div class="chrome-demo">
+      <div class="chrome-brand">Situational Awareness<span>职场态势感知社群</span></div>
+      <div class="chrome-item on"><span>讨论广场</span><span class="dim">12</span></div>
+      <div class="chrome-item"><span>知识库</span></div>
+      <div class="chrome-item"><span>排行榜</span><span class="dim">周榜</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>五 · 文字层级</h2>
+    <p class="sec-note">三级到顶。第四级必然低于 4.5:1，不要发明。</p>
+    <div class="hier">
+      <div>
+        <small>--text · 标题与正文共用</small>
+        <p class="t1">要不要接下这个跨部门项目？</p>
+      </div>
+      <div>
+        <small>--text-soft · 次要说明</small>
+        <p class="t2">三个团队的目标并不一致，需要先确认由谁定优先级。</p>
+      </div>
+      <div>
+        <small>--text-faint · 元信息与「自报」</small>
+        <p class="t3">14 条回复 · 2 小时前 · 自报</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>六 · 相比上一版删掉了什么</h2>
+    <ul class="removed">
+      <li><strong>「60% / 25% / 10% / 5%」配色比例条</strong>——暖灰与白的对比度只有 1.09，肉眼分不出，是一条无法验收的规则。改成一句能执行的话：页面用 <code>--bg</code>，卡片用 <code>--surface</code>，靠 1px <code>--border</code> 分层。</li>
+      <li><strong>衬线备选方案</strong>——只保留一套无衬线。衬线仅限营销落地页，不进产品界面。</li>
+      <li><strong>独立的深色标题色</strong>——标题和正文共用 <code>--text</code>。原本的深青蓝深色现在只作为 <code>--chrome</code>（导航区表面），不再充当文字色。</li>
+      <li><strong>两个硬编码的野色</strong>——原先直接写在 CSS 里、却没进色板的 <code>#455256</code> 和 <code>#72501F</code>，已分别收进 <code>--text-soft</code> 与 <code>--insight-text</code>。</li>
+      <li><strong>白字配琥珀底</strong>——旧值对比度只有 2.98。现在琥珀色永不承载文字，需要琥珀色文字时一律用 <code>--insight-text</code>。</li>
+    </ul>
+  </section>
+</main>
+
+<script>
+  // 令牌 → 展示分组与使用规则。色值不写死，运行时从 design-tokens.css 读取。
+  const GROUPS = [
+    ["层次与描边", [
+      ["--bg", "页面底色。暖灰纸感是温度来源，不要换成纯白或冷灰"],
+      ["--surface", "卡片、帖子、案例卡"],
+      ["--surface-sunken", "内嵌区：引用、代码块、hover 底"],
+      ["--border", "唯一的分层手段。不要用彩色边框做装饰"],
+      ["--border-soft", "更弱的内部分隔，如列表行之间"],
+    ]],
+    ["文字", [
+      ["--text", "标题与正文共用。不再区分标题色"],
+      ["--text-soft", "次要说明、摘要"],
+      ["--text-faint", "元信息：时间、计数、「自报」"],
+      ["--text-on-fill", "品牌色填充块上的文字。导航区不用它"],
+    ]],
+    ["品牌 · 深青蓝（唯一交互色）", [
+      ["--brand", "链接、主按钮、选中态、焦点环、logo"],
+      ["--brand-hover", "悬停与按下加深"],
+      ["--brand-tint", "选中项底色、当前导航项、当前筛选标签"],
+    ]],
+    ["语义 · 琥珀（洞察与加精）", [
+      ["--insight", "图标、左边框、填充块。绝不做文字"],
+      ["--insight-text", "需要琥珀色文字时一律用这个"],
+      ["--insight-tint", "加精卡片、精选区域的底色"],
+    ]],
+    ["语义 · 青玉（已认证）", [
+      ["--verified", "只做小图标加文字，不做实心色块"],
+      ["--verified-tint", "已认证徽章的浅底，谨慎使用"],
+    ]],
+    ["语义 · 砖红（仅真实风险）", [
+      ["--risk", "举报、封禁、破坏性操作、表单错误"],
+      ["--risk-tint", "风险提示条底色。不用于「未认证」"],
+    ]],
+    ["深色导航区", [
+      ["--chrome", "侧栏与顶栏表面。这是表面色，不是文字色"],
+      ["--chrome-hover", "导航项悬停与选中底色"],
+      ["--chrome-text", "导航区内的主文字"],
+      ["--chrome-text-dim", "导航区内的次要文字与计数"],
+    ]],
+  ];
+
+  const palette = document.getElementById("palette");
+
+  function render() {
+    const fresh = getComputedStyle(document.documentElement);
+    palette.innerHTML = GROUPS.map(([title, tokens]) => `
+      <div class="group">
+        <h3>${title}</h3>
+        <div class="swatches">
+          ${tokens.map(([name, rule]) => `
+            <div class="sw">
+              <div class="sw-chip" style="background:var(${name})"></div>
+              <div class="sw-meta">
+                <div class="sw-name">${name}</div>
+                <div class="sw-hex">${fresh.getPropertyValue(name).trim().toUpperCase()}</div>
+                <div class="sw-rule">${rule}</div>
+              </div>
+            </div>`).join("")}
+        </div>
+      </div>`).join("");
+  }
+
+  const toggle = document.getElementById("themeToggle");
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  let dark = prefersDark;
+
+  function apply() {
+    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+    toggle.textContent = dark ? "切换浅色" : "切换深色";
+    render();
+  }
+
+  toggle.addEventListener("click", () => { dark = !dark; apply(); });
+  apply();
+</script>
+</body>
+</html>
