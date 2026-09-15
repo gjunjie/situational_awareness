@@ -70,6 +70,9 @@ function showToast(message, kind = 'normal') {
 
 function friendlyError(error) {
   const message = String(error?.message || error || '')
+  if (/not_authenticated/i.test(message)) {
+    return '登录状态已失效，请重新登录后再试。'
+  }
   if (/row-level security|permission denied|42501/i.test(message)) {
     return '当前账号没有操作权限。请确认使用 Google 登录并已应用数据库脚本。'
   }
@@ -370,7 +373,10 @@ async function start() {
   if (backend.isDemo) elements.loginButton.querySelector('span').textContent = '进入演示版'
 
   backend.onAuthChange((nextSession) => {
-    renderSession(nextSession).catch((error) => showToast(friendlyError(error), 'error'))
+    renderSession(nextSession).catch((error) => {
+      setView('login')
+      showToast(friendlyError(error), 'error')
+    })
   })
 
   try {
