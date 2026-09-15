@@ -50,7 +50,7 @@ insert into public.invite_codes (code) values ('YOUR-CODE');
 -- insert into public.invite_codes (code, max_uses) values ('YOUR-CODE', 50);
 ```
 
-The client upper-cases whatever a user types before checking it, so store codes in upper case to avoid a code that only half-matches.
+Both the client and `redeem_invite_code()` upper-case whatever is typed before checking it, and `invite_codes.code` has a check constraint requiring upper case, so a lower/mixed-case insert is rejected outright rather than silently never matching.
 
 ## Verification
 
