@@ -1,20 +1,7 @@
 :root {
-  color-scheme: light;
-  --ink: #16232e;
-  --ink-soft: #566773;
-  --ink-faint: #83919a;
-  --paper: #f2f4f1;
-  --surface: #fffefa;
-  --line: #dbe1dc;
-  --line-soft: #e8ece8;
-  --amber: #c97a2e;
-  --amber-dark: #9d591d;
-  --amber-soft: #f4e5ce;
-  --jade: #2e7d6b;
-  --jade-soft: #e2efeb;
-  --danger: #ad4939;
+  /* Color lives entirely in design-tokens.css now — this file only keeps
+     the non-color tokens that system doesn't own. */
   --shadow: 0 20px 55px rgb(22 35 46 / 9%);
-  --serif: "Songti SC", "STSong", "Noto Serif SC", Georgia, serif;
   --sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 
@@ -24,16 +11,16 @@
 
 html {
   min-width: 320px;
-  background: var(--paper);
+  background: var(--bg);
 }
 
 body {
   min-height: 100vh;
   margin: 0;
-  color: var(--ink);
+  color: var(--text);
   background:
-    radial-gradient(circle at 6% 3%, rgb(201 122 46 / 8%), transparent 22rem),
-    var(--paper);
+    radial-gradient(circle at 6% 3%, color-mix(in srgb, var(--brand) 8%, transparent), transparent 22rem),
+    var(--bg);
   font-family: var(--sans);
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
@@ -55,7 +42,7 @@ input:focus-visible,
 textarea:focus-visible,
 summary:focus-visible,
 a:focus-visible {
-  outline: 3px solid rgb(201 122 46 / 24%);
+  outline: 3px solid color-mix(in srgb, var(--brand) 24%, transparent);
   outline-offset: 2px;
 }
 
@@ -68,9 +55,9 @@ a:focus-visible {
   top: 0;
   z-index: 20;
   padding: 8px 16px;
-  color: #4b2b0f;
-  background: var(--amber-soft);
-  border-bottom: 1px solid #e4cba8;
+  color: var(--text-soft);
+  background: var(--surface-sunken);
+  border-bottom: 1px solid var(--border);
   font-size: 12px;
   font-weight: 650;
   text-align: center;
@@ -86,7 +73,7 @@ a:focus-visible {
 #loading-view {
   align-content: center;
   gap: 10px;
-  color: var(--ink-soft);
+  color: var(--text-soft);
   text-align: center;
 }
 
@@ -96,7 +83,7 @@ a:focus-visible {
   height: 48px;
   place-items: center;
   border-radius: 50%;
-  background: var(--ink);
+  background: var(--brand);
 }
 
 .brand-mark svg {
@@ -106,16 +93,16 @@ a:focus-visible {
 
 .brand-mark circle:first-child {
   fill: none;
-  stroke: #e0a059;
+  stroke: var(--text-on-fill);
   stroke-width: 1.6;
 }
 
 .brand-mark path {
-  fill: #e0a059;
+  fill: var(--text-on-fill);
 }
 
 .brand-mark .brand-center {
-  fill: var(--ink);
+  fill: var(--brand);
   stroke: none;
 }
 
@@ -134,9 +121,9 @@ a:focus-visible {
   padding: clamp(30px, 7vw, 64px);
   overflow: hidden;
   background:
-    linear-gradient(135deg, rgb(255 255 255 / 98%), rgb(255 254 250 / 92%)),
+    linear-gradient(135deg, var(--surface), color-mix(in srgb, var(--surface) 65%, var(--surface-sunken))),
     var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--border);
   border-radius: 18px;
   box-shadow: var(--shadow);
 }
@@ -149,20 +136,20 @@ a:focus-visible {
 }
 
 .brand-name {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: 17px;
   font-weight: 700;
 }
 
 .brand-subtitle {
   margin-top: 2px;
-  color: var(--ink-faint);
+  color: var(--text-faint);
   font-size: 12px;
 }
 
 .eyebrow {
   margin: 0 0 8px;
-  color: var(--amber-dark);
+  color: var(--brand);
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.14em;
@@ -176,7 +163,7 @@ a:focus-visible {
 .login-card h1,
 .intro-panel h1 {
   margin: 0;
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: clamp(32px, 6vw, 48px);
   font-weight: 650;
   letter-spacing: -0.035em;
@@ -186,7 +173,7 @@ a:focus-visible {
 .login-copy {
   max-width: 31rem;
   margin: 24px 0 30px;
-  color: var(--ink-soft);
+  color: var(--text-soft);
   font-size: 15px;
   line-height: 1.8;
 }
@@ -208,15 +195,15 @@ a:focus-visible {
   gap: 11px;
   min-height: 52px;
   padding: 0 18px;
-  color: white;
-  background: var(--ink);
+  color: var(--text-on-fill);
+  background: var(--text);
   border-radius: 9px;
   font-weight: 700;
   transition: transform 140ms ease, background 140ms ease;
 }
 
 .google-button:hover {
-  background: #223541;
+  background: color-mix(in srgb, var(--text), black 15%);
   transform: translateY(-1px);
 }
 
@@ -235,7 +222,7 @@ button:disabled {
 
 .privacy-note {
   margin: 14px 0 0;
-  color: var(--ink-faint);
+  color: var(--text-faint);
   font-size: 12px;
   text-align: center;
 }
@@ -253,8 +240,8 @@ button:disabled {
   align-items: center;
   justify-content: space-between;
   padding: 10px clamp(18px, 4vw, 48px);
-  background: rgb(255 254 250 / 92%);
-  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  border-bottom: 1px solid var(--border);
   backdrop-filter: blur(12px);
 }
 
@@ -274,13 +261,13 @@ button:disabled {
 }
 
 .compact-brand strong {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: 14px;
 }
 
 .compact-brand small {
   margin-top: 1px;
-  color: var(--ink-faint);
+  color: var(--text-faint);
   font-size: 12px;
 }
 
@@ -301,13 +288,13 @@ button:disabled {
 
 .text-button {
   padding: 5px 0;
-  color: var(--ink-faint);
+  color: var(--text-faint);
   background: transparent;
   font-size: 13px;
 }
 
 .text-button:hover {
-  color: var(--ink);
+  color: var(--text);
 }
 
 .page-grid {
@@ -331,15 +318,15 @@ button:disabled {
 
 .intro-panel > p:not(.eyebrow) {
   margin: 22px 0 28px;
-  color: var(--ink-soft);
+  color: var(--text-soft);
   font-size: 15px;
   line-height: 1.8;
 }
 
 .rule-card {
   padding: 2px 18px;
-  background: rgb(255 254 250 / 62%);
-  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 62%, transparent);
+  border: 1px solid var(--border);
   border-radius: 12px;
 }
 
@@ -348,7 +335,7 @@ button:disabled {
   grid-template-columns: 28px 1fr;
   gap: 8px;
   padding: 18px 0;
-  border-top: 1px solid var(--line-soft);
+  border-top: 1px solid var(--border-soft);
 }
 
 .rule-card > div:first-child {
@@ -356,21 +343,21 @@ button:disabled {
 }
 
 .rule-number {
-  color: var(--amber);
-  font-family: var(--serif);
+  color: var(--brand);
+  font-family: var(--sans);
   font-size: 13px;
   font-weight: 700;
 }
 
 .rule-card p {
   margin: 0;
-  color: var(--ink-soft);
+  color: var(--text-soft);
   font-size: 13px;
   line-height: 1.65;
 }
 
 .rule-card strong {
-  color: var(--ink);
+  color: var(--text);
 }
 
 .discussion-column {
@@ -380,7 +367,7 @@ button:disabled {
 .composer-card,
 .post-card {
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--border);
   border-radius: 12px;
   box-shadow: 0 2px 9px rgb(22 35 46 / 3%);
 }
@@ -400,7 +387,7 @@ button:disabled {
 .composer-heading h2,
 .feed-heading-row h2 {
   margin: 0;
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: 21px;
   line-height: 1.35;
 }
@@ -408,9 +395,9 @@ button:disabled {
 .anon-pill {
   flex: none;
   padding: 5px 9px;
-  color: var(--ink-soft);
-  background: var(--paper);
-  border: 1px solid var(--line);
+  color: var(--text-soft);
+  background: var(--bg);
+  border: 1px solid var(--border);
   border-radius: 999px;
   font-size: 12px;
   font-weight: 750;
@@ -419,7 +406,7 @@ button:disabled {
 label {
   display: block;
   margin: 15px 0 7px;
-  color: var(--ink-soft);
+  color: var(--text-soft);
   font-size: 14px;
   font-weight: 700;
 }
@@ -428,9 +415,9 @@ input,
 textarea {
   width: 100%;
   padding: 11px 13px;
-  color: var(--ink);
-  background: #fbfcf9;
-  border: 1px solid var(--line);
+  color: var(--text);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
   border-radius: 8px;
   outline: none;
   transition: border 140ms ease, box-shadow 140ms ease;
@@ -444,13 +431,13 @@ textarea {
 
 input:focus,
 textarea:focus {
-  border-color: var(--amber);
-  box-shadow: 0 0 0 3px rgb(201 122 46 / 10%);
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 10%, transparent);
 }
 
 input::placeholder,
 textarea::placeholder {
-  color: #96a19f;
+  color: var(--text-faint);
 }
 
 .composer-actions,
@@ -464,7 +451,7 @@ textarea::placeholder {
 
 .character-count,
 .reply-identity {
-  color: var(--ink-faint);
+  color: var(--text-faint);
   font-size: 12px;
 }
 
@@ -478,21 +465,23 @@ textarea::placeholder {
 }
 
 .primary-button {
-  color: #231709;
-  background: var(--amber);
+  color: var(--text-on-fill);
+  background: var(--brand);
 }
 
 .primary-button:hover {
-  background: #d68a3f;
+  background: var(--brand-hover);
 }
 
 .secondary-button {
-  color: white;
-  background: var(--ink);
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
 }
 
 .secondary-button:hover {
-  background: #223541;
+  border-color: var(--brand);
+  color: var(--brand);
 }
 
 .feed-heading-row {
@@ -508,14 +497,14 @@ textarea::placeholder {
   width: 36px;
   height: 36px;
   place-items: center;
-  color: var(--ink-soft);
+  color: var(--text-soft);
   background: transparent;
-  border: 1px solid var(--line);
+  border: 1px solid var(--border);
   border-radius: 8px;
 }
 
 .icon-button:hover {
-  color: var(--ink);
+  color: var(--text);
   background: var(--surface);
 }
 
@@ -541,20 +530,20 @@ textarea::placeholder {
 .feed-status,
 .empty-feed {
   padding: 36px 20px;
-  color: var(--ink-faint);
-  background: rgb(255 254 250 / 45%);
-  border: 1px dashed var(--line);
+  color: var(--text-faint);
+  background: color-mix(in srgb, var(--surface) 45%, transparent);
+  border: 1px dashed var(--border);
   border-radius: 12px;
   font-size: 14px;
   text-align: center;
 }
 
 .feed-status.error {
-  color: var(--danger);
+  color: var(--risk);
 }
 
 .empty-feed strong {
-  color: var(--ink);
+  color: var(--text);
 }
 
 .empty-feed p {
@@ -580,17 +569,17 @@ textarea::placeholder {
   flex: none;
   overflow: hidden;
   place-items: center;
-  color: white;
-  background: var(--jade);
+  color: var(--brand);
+  background: var(--brand-tint);
   border-radius: 50%;
   font-size: 10px;
   font-weight: 800;
 }
 
 .avatar.anonymous {
-  color: #dce3e3;
-  background: #62737c;
-  font-family: var(--serif);
+  color: var(--text-faint);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
   font-size: 16px;
 }
 
@@ -615,17 +604,17 @@ textarea::placeholder {
 }
 
 .post-author {
-  color: var(--ink-soft);
+  color: var(--text-soft);
 }
 
 .post-time,
 .reply-time {
-  color: var(--ink-faint);
+  color: var(--text-faint);
 }
 
 .post-title {
   margin: 18px 0 8px;
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: 19px;
   line-height: 1.45;
 }
@@ -638,20 +627,20 @@ textarea::placeholder {
 
 .post-body {
   margin: 0;
-  color: var(--ink-soft);
+  color: var(--text-soft);
   font-size: 15px;
   line-height: 1.78;
 }
 
 .thread {
   margin-top: 20px;
-  border-top: 1px solid var(--line-soft);
+  border-top: 1px solid var(--border-soft);
 }
 
 .thread summary {
   width: fit-content;
   padding: 13px 0 0;
-  color: var(--jade);
+  color: var(--brand);
   cursor: pointer;
   font-size: 13px;
   font-weight: 800;
@@ -678,7 +667,7 @@ textarea::placeholder {
 
 .reply {
   padding: 16px 0;
-  border-top: 1px solid var(--line-soft);
+  border-top: 1px solid var(--border-soft);
 }
 
 .reply:first-child {
@@ -703,21 +692,21 @@ textarea::placeholder {
 
 .reply-body {
   margin: 5px 0 0;
-  color: var(--ink-soft);
+  color: var(--text-soft);
   font-size: 14px;
   line-height: 1.75;
 }
 
 .empty-replies {
   padding: 8px 0 16px;
-  color: var(--ink-faint);
+  color: var(--text-faint);
   font-size: 13px;
 }
 
 .reply-form {
   margin-top: 8px;
   padding: 16px;
-  background: var(--paper);
+  background: var(--bg);
   border-radius: 9px;
 }
 
@@ -742,8 +731,8 @@ textarea::placeholder {
   z-index: 30;
   max-width: min(90vw, 560px);
   padding: 11px 17px;
-  color: white;
-  background: var(--ink);
+  color: var(--text-on-fill);
+  background: var(--text);
   border-radius: 8px;
   box-shadow: var(--shadow);
   font-size: 12px;
@@ -754,7 +743,7 @@ textarea::placeholder {
 }
 
 .toast[data-kind="error"] {
-  background: var(--danger);
+  background: var(--risk);
 }
 
 .toast.show {
