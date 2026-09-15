@@ -3,10 +3,11 @@
 The smallest launchable product is intentionally only this:
 
 1. Sign in with Google.
-2. Publish an anonymous text post.
-3. Reply with the Google account's display name and avatar.
+2. Redeem an invite code once, the first time.
+3. Publish an anonymous text post.
+4. Reply with the Google account's display name and avatar.
 
-There are no DMs, invitations, profiles, likes, search, categories, notifications, images, realtime updates, or admin UI. Admin moderation happens directly in the Supabase dashboard.
+There are no DMs, profiles, likes, search, categories, notifications, images, realtime updates, or admin UI. Admin moderation, including creating invite codes, happens directly in the Supabase dashboard.
 
 ## Local UI demo
 
@@ -17,7 +18,7 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:5173/?demo=1`. Demo data stays in that browser's `localStorage` and never reaches Supabase.
+Open `http://localhost:5173/?demo=1`. Demo data stays in that browser's `localStorage` and never reaches Supabase. The demo invite code is `DEMO2026`.
 
 ## Connect Supabase
 
@@ -39,6 +40,18 @@ Use Node 20 or newer and Supabase CLI 2.117.0.
 6. Copy `.env.example` to `.env` and add the project URL plus **publishable** key. Never put a secret or `service_role` key in a `VITE_` variable.
 7. Restart `npm run dev` and use the Google button.
 
+### Creating an invite code
+
+There is no admin UI yet. In the Supabase SQL editor, run:
+
+```sql
+insert into public.invite_codes (code) values ('YOUR-CODE');
+-- optional: cap how many people can redeem it
+-- insert into public.invite_codes (code, max_uses) values ('YOUR-CODE', 50);
+```
+
+The client upper-cases whatever a user types before checking it, so store codes in upper case to avoid a code that only half-matches.
+
 ## Verification
 
 ```bash
@@ -46,7 +59,7 @@ npm test
 npm run build
 ```
 
-The migration uses both grants and RLS. Unauthenticated users have no table or sequence privileges. Authenticated users must have Google's provider in immutable `app_metadata`. Post `author_id` is retained for moderation but has no client SELECT grant, so it is absent from both the UI and browser-accessible Data API responses.
+The migrations use both grants and RLS. Unauthenticated users have no table or sequence privileges. Authenticated users must have Google's provider in immutable `app_metadata` **and** a row in `members`, created only by redeeming a valid, still-active invite code through the `redeem_invite_code()` function. `invite_codes` itself has no client grants at all, so codes can't be listed or enumerated through the Data API. Post `author_id` is retained for moderation but has no client SELECT grant, so it is absent from both the UI and browser-accessible Data API responses.
 
 ## Publish with GitHub Pages
 
