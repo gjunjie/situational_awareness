@@ -15,6 +15,28 @@
 
 ---
 
+## 当前进度（persisted here so the team can check status anytime — update as PRs merge）
+
+线上 MMMVP：https://situational-awareness-mmmvp.luohongchen1993.chatgpt.site/（`main` 分支，Vite + 原生 JS + Supabase，见第 4 节技术栈）
+
+**✅ 已上线**
+- 讨论广场核心闭环：匿名发帖、实名回复、Google 登录。匿名保护做在数据库层（`posts.author_id` 对 Data API 完全不给 SELECT 权限），不是前端隐藏
+
+**🚧 进行中**
+- 邀请码准入门槛（分支 `feature/invite-code-gate`，PR 制作中）—— 在此之前任何 Google 账号登录后即可读帖发帖，没有邀请制的准入门槛，这是当前唯一的信任模型缺口
+
+**❌ 未开始**（按建议优先级排序）
+1. 讨论广场：分类 / 点赞排序 / markdown 渲染
+2. 用户身份标签（角色自选：领航执委会/导师/领航学员+届别/其他用户；认证状态可以晚一点再做）
+3. 主页与联系方式（微信 / 邮箱 / LinkedIn，各自独立可见性开关）——目前资料只有 Google 给的姓名和头像
+4. 私密联系方式分享（1:1 深度帮助）
+5. 通知中心（站内 + 邮件）
+6. 知识库（版主加精 + 领航等机构提供的外部案例）
+7. 排行榜与徽章
+8. Weekly 饭局（外链 Luma 入口，不算重债）
+
+---
+
 ## 1. 功能范围（V1）
 
 | 模块 | 说明 |
