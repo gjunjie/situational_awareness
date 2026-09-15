@@ -6,6 +6,7 @@ import {
   formatRelativeTime,
   initials,
   safeAvatarUrl,
+  sortReplies,
   validatePost,
   validateReply,
 } from '../src/lib.js'
@@ -48,4 +49,18 @@ test('display names and initials have safe fallbacks', () => {
   assert.equal(displayName({ user_metadata: {} }), 'Google 用户')
   assert.equal(initials('Helena Li'), 'HL')
   assert.equal(initials('小明'), '小明')
+})
+
+test('replies sort by upvote count then oldest first', () => {
+  const replies = [
+    { id: 2, created_at: '2026-09-15T10:00:00Z', upvote_count: 0, body: 'new zero' },
+    { id: 3, created_at: '2026-09-15T12:00:00Z', upvote_count: 3, body: 'newer high' },
+    { id: 1, created_at: '2026-09-15T08:00:00Z', upvote_count: 3, body: 'older high' },
+  ]
+
+  assert.deepEqual(
+    sortReplies(replies).map((reply) => reply.id),
+    [1, 3, 2],
+  )
+  assert.equal(replies[0].id, 2)
 })

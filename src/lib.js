@@ -94,3 +94,20 @@ export function initials(name) {
   }
   return cleanName.slice(0, 2).toUpperCase()
 }
+
+export function compareReplies(a, b) {
+  const voteDiff = (Number(b?.upvote_count) || 0) - (Number(a?.upvote_count) || 0)
+  if (voteDiff !== 0) return voteDiff
+
+  const timeA = new Date(a?.created_at).getTime()
+  const timeB = new Date(b?.created_at).getTime()
+  const safeA = Number.isFinite(timeA) ? timeA : 0
+  const safeB = Number.isFinite(timeB) ? timeB : 0
+  if (safeA !== safeB) return safeA - safeB
+
+  return (Number(a?.id) || 0) - (Number(b?.id) || 0)
+}
+
+export function sortReplies(replies) {
+  return [...(replies || [])].sort(compareReplies)
+}

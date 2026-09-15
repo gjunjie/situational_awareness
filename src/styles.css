@@ -697,6 +697,47 @@ textarea::placeholder {
   line-height: 1.75;
 }
 
+.vote-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  min-height: 32px;
+  padding: 0 10px 0 8px;
+  color: var(--text-faint);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.vote-button svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.vote-button:hover,
+.vote-button[aria-pressed="true"] {
+  color: var(--brand);
+  background: var(--brand-tint);
+  border-color: var(--brand);
+}
+
+.vote-button[aria-pressed="true"] svg {
+  fill: currentcolor;
+}
+
+.vote-count {
+  font-variant-numeric: tabular-nums;
+}
+
 .empty-replies {
   padding: 8px 0 16px;
   color: var(--text-faint);
