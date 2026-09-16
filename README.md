@@ -52,6 +52,18 @@ insert into public.invite_codes (code) values ('YOUR-CODE');
 
 Both the client and `redeem_invite_code()` upper-case whatever is typed before checking it, and `invite_codes.code` has a check constraint requiring upper case, so a lower/mixed-case insert is rejected outright rather than silently never matching.
 
+To check how a code is doing or shut one off, still in the Supabase SQL editor:
+
+```sql
+-- See remaining uses (null max_uses means unlimited)
+select code, is_active, used_count, max_uses from public.invite_codes;
+
+-- Stop a code from being redeemed further, without deleting its history
+update public.invite_codes set is_active = false where code = 'YOUR-CODE';
+```
+
+There's no bulk/random generator built in — each code is a literal string you choose and insert by hand.
+
 ## Verification
 
 ```bash
