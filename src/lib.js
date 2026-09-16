@@ -111,3 +111,11 @@ export function compareReplies(a, b) {
 export function sortReplies(replies) {
   return [...(replies || [])].sort(compareReplies)
 }
+
+export function withVoteState(reply, liked) {
+  return {
+    ...reply,
+    upvote_count: Math.max(0, Number(reply.upvote_count) || 0),
+    liked_by_me: Boolean(liked),
+  }
+}

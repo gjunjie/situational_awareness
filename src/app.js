@@ -127,22 +127,36 @@ function makeThumbsUpIcon() {
 }
 
 function makeVoteButton(reply) {
-  const liked = Boolean(reply.liked_by_me)
-  const count = Math.max(0, Number(reply.upvote_count) || 0)
+  let liked = Boolean(reply.liked_by_me)
+  let count = Math.max(0, Number(reply.upvote_count) || 0)
   const button = document.createElement('button')
+  const countLabel = element('span', 'vote-count', String(count))
   button.type = 'button'
   button.className = 'vote-button'
-  button.setAttribute('aria-pressed', liked ? 'true' : 'false')
-  button.setAttribute('aria-label', liked ? `取消点赞，当前 ${count} 人点赞` : `点赞，当前 ${count} 人点赞`)
-  button.append(makeThumbsUpIcon(), element('span', 'vote-count', String(count)))
+  button.append(makeThumbsUpIcon(), countLabel)
+
+  function render() {
+    button.setAttribute('aria-pressed', liked ? 'true' : 'false')
+    button.setAttribute('aria-label', liked ? `取消点赞，当前 ${count} 人点赞` : `点赞，当前 ${count} 人点赞`)
+    countLabel.textContent = String(count)
+  }
+  render()
 
   button.addEventListener('click', async () => {
     if (button.disabled) return
     button.disabled = true
+    const previousLiked = liked
+    const previousCount = count
+    liked = !liked
+    count = Math.max(0, count + (liked ? 1 : -1))
+    render()
+
     try {
       await backend.toggleReplyVote(reply.id)
-      await loadPosts({ preserveOpenPost: String(reply.post_id) })
     } catch (error) {
+      liked = previousLiked
+      count = previousCount
+      render()
       showToast(friendlyError(error), 'error')
     } finally {
       button.disabled = false

@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import { sortReplies } from './lib.js'
+import { sortReplies, withVoteState } from './lib.js'
 
 const DEMO_STORAGE_KEY = 'situational-awareness-demo-v2'
 const DEMO_SESSION_KEY = 'situational-awareness-demo-session'
@@ -154,24 +154,16 @@ export function createBackend() {
 
       const { data: replies, error: repliesError } = await supabase
         .from('replies')
-        .select('id,post_id,author_name,author_avatar_url,body,created_at,upvote_count')
+        .select('id,post_id,author_name,author_avatar_url,body,created_at,upvote_count,reply_votes(reply_id)')
         .in('post_id', posts.map((post) => post.id))
 
       if (repliesError) throw repliesError
 
-      const likedIds = await loadLikedReplyIds(
-        supabase,
-        (replies || []).map((reply) => reply.id),
-      )
-
       const repliesByPost = new Map()
-      for (const reply of replies || []) {
+      for (const { reply_votes, ...reply } of replies || []) {
         const key = String(reply.post_id)
         if (!repliesByPost.has(key)) repliesByPost.set(key, [])
-        repliesByPost.get(key).push({
-          ...reply,
-          liked_by_me: likedIds.has(Number(reply.id)),
-        })
+        repliesByPost.get(key).push(withVoteState(reply, reply_votes && reply_votes.length > 0))
       }
 
       return posts.map((post) => ({
@@ -191,32 +183,10 @@ export function createBackend() {
     },
 
     async toggleReplyVote(replyId) {
-      const { data: existing, error: readError } = await supabase
-        .from('reply_votes')
-        .select('reply_id')
-        .eq('reply_id', replyId)
-        .maybeSingle()
-
-      if (readError) throw readError
-
-      if (existing) {
-        const { error } = await supabase.from('reply_votes').delete().eq('reply_id', replyId)
-        if (error) throw error
-        return
-      }
-
-      const { error } = await supabase.from('reply_votes').insert({ reply_id: replyId })
-      if (error && error.code !== '23505') throw error
+      const { error } = await supabase.rpc('toggle_reply_vote', { p_reply_id: replyId })
+      if (error) throw error
     },
   }
-}
-
-async function loadLikedReplyIds(supabase, replyIds) {
-  if (!replyIds.length) return new Set()
-
-  const { data, error } = await supabase.from('reply_votes').select('reply_id').in('reply_id', replyIds)
-  if (error) throw error
-  return new Set((data || []).map((vote) => Number(vote.reply_id)))
 }
 
 function createDemoBackend() {
@@ -288,11 +258,7 @@ function createDemoBackend() {
           replies: sortReplies(
             data.replies
               .filter((reply) => String(reply.post_id) === String(post.id))
-              .map((reply) => ({
-                ...reply,
-                upvote_count: Number(reply.upvote_count) || 0,
-                liked_by_me: likedIds.has(Number(reply.id)),
-              })),
+              .map((reply) => withVoteState(reply, likedIds.has(Number(reply.id)))),
           ),
         }))
         .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))

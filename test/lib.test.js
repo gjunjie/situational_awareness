@@ -9,6 +9,7 @@ import {
   sortReplies,
   validatePost,
   validateReply,
+  withVoteState,
 } from '../src/lib.js'
 
 test('post validation trims valid content and rejects missing fields', () => {
@@ -63,4 +64,17 @@ test('replies sort by upvote count then oldest first', () => {
     [1, 3, 2],
   )
   assert.equal(replies[0].id, 2)
+})
+
+test('vote state clamps negative counts and coerces liked to a boolean', () => {
+  assert.deepEqual(withVoteState({ id: 1, upvote_count: 2 }, true), {
+    id: 1,
+    upvote_count: 2,
+    liked_by_me: true,
+  })
+  assert.deepEqual(withVoteState({ id: 2, upvote_count: -3 }, undefined), {
+    id: 2,
+    upvote_count: 0,
+    liked_by_me: false,
+  })
 })
