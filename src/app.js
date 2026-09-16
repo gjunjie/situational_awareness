@@ -144,6 +144,7 @@ function makeVoteButton(reply) {
       await loadPosts({ preserveOpenPost: String(reply.post_id) })
     } catch (error) {
       showToast(friendlyError(error), 'error')
+    } finally {
       button.disabled = false
     }
   })
