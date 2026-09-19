@@ -10,6 +10,7 @@ import {
   validatePost,
   validateReply,
 } from './lib.js'
+import { renderMarkdown } from './markdown.js'
 
 const backend = createBackend()
 const elements = {
@@ -89,6 +90,16 @@ function element(tag, className, text) {
   return node
 }
 
+function makeMarkdownBody(className, source) {
+  const body = element('div', `${className} markdown-body`)
+  try {
+    body.innerHTML = renderMarkdown(source)
+  } catch {
+    body.textContent = String(source ?? '')
+  }
+  return body
+}
+
 function makeAvatar(name, avatarUrl, anonymous = false) {
   const wrapper = element('div', anonymous ? 'avatar anonymous' : 'avatar')
   wrapper.setAttribute('aria-hidden', 'true')
@@ -121,7 +132,7 @@ function makeReply(reply) {
     element('strong', 'reply-name', reply.author_name || 'Google 用户'),
     element('time', 'reply-time', formatRelativeTime(reply.created_at)),
   )
-  const body = element('p', 'reply-body', reply.body)
+  const body = makeMarkdownBody('reply-body', reply.body)
   content.append(header, body, makeVoteButton(reply))
   item.append(content)
   return item
@@ -234,7 +245,7 @@ function makePost(post, shouldOpen = false) {
   header.append(meta)
 
   const title = element('h3', 'post-title', post.title)
-  const body = element('p', 'post-body', post.body)
+  const body = makeMarkdownBody('post-body', post.body)
 
   const thread = document.createElement('details')
   thread.className = 'thread'
