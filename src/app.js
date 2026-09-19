@@ -6,6 +6,7 @@ import {
   formatRelativeTime,
   initials,
   safeAvatarUrl,
+  validateFeedback,
   validatePost,
   validateReply,
 } from './lib.js'
@@ -17,6 +18,11 @@ const elements = {
   demoBanner: document.querySelector('#demo-banner'),
   feed: document.querySelector('#feed'),
   feedStatus: document.querySelector('#feed-status'),
+  feedbackBody: document.querySelector('#feedback-body'),
+  feedbackButton: document.querySelector('#feedback-button'),
+  feedbackCancel: document.querySelector('#feedback-cancel'),
+  feedbackDialog: document.querySelector('#feedback-dialog'),
+  feedbackForm: document.querySelector('#feedback-form'),
   loading: document.querySelector('#loading-view'),
   login: document.querySelector('#signed-out-view'),
   loginButton: document.querySelector('#login-button'),
@@ -250,6 +256,7 @@ async function renderSession(nextSession) {
   if (!session) {
     elements.accountName.textContent = ''
     elements.feed.replaceChildren()
+    elements.feedbackDialog.close()
     setView('login')
     return
   }
@@ -282,6 +289,37 @@ elements.logoutButton.addEventListener('click', async () => {
 })
 
 elements.refreshButton.addEventListener('click', () => loadPosts())
+
+elements.feedbackButton.addEventListener('click', () => {
+  elements.feedbackDialog.showModal()
+})
+
+elements.feedbackCancel.addEventListener('click', () => {
+  elements.feedbackDialog.close()
+})
+
+elements.feedbackForm.addEventListener('submit', async (event) => {
+  event.preventDefault()
+  const result = validateFeedback(elements.feedbackBody.value)
+  if (!result.ok) {
+    showToast(result.message, 'error')
+    elements.feedbackBody.focus()
+    return
+  }
+
+  const button = elements.feedbackForm.querySelector('button[type="submit"]')
+  setButtonBusy(button, true, '发送中…')
+  try {
+    await backend.createFeedback(result.value)
+    elements.feedbackForm.reset()
+    elements.feedbackDialog.close()
+    showToast('收到了，谢谢。')
+  } catch (error) {
+    showToast(friendlyError(error), 'error')
+  } finally {
+    setButtonBusy(button, false)
+  }
+})
 
 elements.postBody.addEventListener('input', () => {
   elements.postCharacterCount.textContent = `${elements.postBody.value.length} / ${LIMITS.postMax}`

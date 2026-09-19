@@ -6,7 +6,7 @@ The smallest launchable product is intentionally only this:
 2. Publish an anonymous text post.
 3. Reply with the Google account's display name and avatar.
 
-There are no DMs, invitations, profiles, likes, search, categories, notifications, images, realtime updates, or admin UI. Admin moderation happens directly in the Supabase dashboard.
+There are no DMs, invitations, profiles, likes, search, categories, notifications, images, realtime updates, or admin UI. Admin moderation happens directly in the Supabase dashboard. Logged-in members can send a short feedback note from the top bar.
 
 ## Local UI demo
 
@@ -46,7 +46,7 @@ npm test
 npm run build
 ```
 
-The migration uses both grants and RLS. Unauthenticated users have no table or sequence privileges. Authenticated users must have Google's provider in immutable `app_metadata`. Post `author_id` is retained for moderation but has no client SELECT grant, so it is absent from both the UI and browser-accessible Data API responses.
+The migration uses both grants and RLS. Unauthenticated users have no table or sequence privileges. Authenticated users must have Google's provider in immutable `app_metadata`. Post `author_id` is retained for moderation but has no client SELECT grant, so it is absent from both the UI and browser-accessible Data API responses. Feedback is insert-only; read it in the SQL editor with `select f.created_at, u.email, f.body from public.feedback f join auth.users u on u.id = f.author_id order by f.created_at desc`.
 
 ## Publish with GitHub Pages
 

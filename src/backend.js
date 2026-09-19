@@ -19,6 +19,8 @@ function initialDemoData() {
   return {
     nextPostId: 3,
     nextReplyId: 4,
+    nextFeedbackId: 1,
+    feedback: [],
     posts: [
       {
         id: 2,
@@ -160,6 +162,11 @@ export function createBackend() {
       const { error } = await supabase.from('replies').insert({ post_id: postId, ...reply })
       if (error) throw error
     },
+
+    async createFeedback(feedback) {
+      const { error } = await supabase.from('feedback').insert(feedback)
+      if (error) throw error
+    },
   }
 }
 
@@ -245,6 +252,18 @@ function createDemoBackend() {
         author_name: demoUser.user_metadata.full_name,
         author_avatar_url: '',
         ...reply,
+        created_at: new Date().toISOString(),
+      })
+      writeData(data)
+    },
+
+    async createFeedback(feedback) {
+      const data = readData()
+      data.feedback ??= []
+      data.nextFeedbackId ??= 1
+      data.feedback.push({
+        id: data.nextFeedbackId++,
+        ...feedback,
         created_at: new Date().toISOString(),
       })
       writeData(data)

@@ -3,6 +3,7 @@ export const LIMITS = Object.freeze({
   titleMax: 120,
   postMax: 4000,
   replyMax: 2000,
+  feedbackMax: 2000,
 })
 
 export function normalizeText(value) {
@@ -37,6 +38,19 @@ export function validateReply(body) {
   }
   if (cleanBody.length > LIMITS.replyMax) {
     return { ok: false, message: `回复不能超过 ${LIMITS.replyMax} 个字。` }
+  }
+
+  return { ok: true, value: { body: cleanBody } }
+}
+
+export function validateFeedback(body) {
+  const cleanBody = normalizeText(body)
+
+  if (!cleanBody) {
+    return { ok: false, message: '请写下你的反馈。' }
+  }
+  if (cleanBody.length > LIMITS.feedbackMax) {
+    return { ok: false, message: `反馈不能超过 ${LIMITS.feedbackMax} 个字。` }
   }
 
   return { ok: true, value: { body: cleanBody } }
