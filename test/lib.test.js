@@ -5,8 +5,10 @@ import {
   displayName,
   formatRelativeTime,
   initials,
+  normalizeInviteCode,
   safeAvatarUrl,
   sortReplies,
+  validateInviteCode,
   validatePost,
   validateReply,
   withVoteState,
@@ -43,6 +45,14 @@ test('avatar URLs only allow http and https', () => {
   assert.equal(safeAvatarUrl('javascript:alert(1)'), null)
   assert.equal(safeAvatarUrl('data:text/html,bad'), null)
   assert.equal(safeAvatarUrl('https://example.com/avatar.png'), 'https://example.com/avatar.png')
+})
+
+test('invite codes are trimmed and upper-cased', () => {
+  assert.equal(normalizeInviteCode('  demo2026  '), 'DEMO2026')
+  assert.equal(normalizeInviteCode(null), '')
+  assert.deepEqual(validateInviteCode('  demo2026  '), { ok: true, value: 'DEMO2026' })
+  assert.equal(validateInviteCode('   ').ok, false)
+  assert.equal(validateInviteCode('').ok, false)
 })
 
 test('display names and initials have safe fallbacks', () => {
