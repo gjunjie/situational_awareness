@@ -5,7 +5,7 @@ The smallest launchable product is intentionally only this:
 1. Sign in with Google.
 2. Redeem an invite code once, the first time.
 3. Publish an anonymous text post.
-4. Reply with the Google account's display name and avatar.
+4. Reply with the Google account's display name, or anonymously if the box is checked.
 5. Upvote a reply; replies in a thread sort by vote count.
 
 There are no DMs, profiles, search, categories, notifications, images, realtime updates, or admin UI. Admin moderation, including creating invite codes, happens directly in the Supabase dashboard.

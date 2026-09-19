@@ -42,6 +42,7 @@ function initialDemoData() {
         post_id: 2,
         author_name: '林然',
         author_avatar_url: '',
+        is_anonymous: false,
         body: '我会先把 **接项目** 和 **接受当前资源条件** 拆开。可以接，但先写成一页请老板选择取舍：\n\n1. 成功条件是什么\n2. 缺哪些人和时间\n3. 做不到时怎么收场',
         created_at: hoursAgo(1),
         upvote_count: 1,
@@ -51,6 +52,7 @@ function initialDemoData() {
         post_id: 1,
         author_name: '周宁',
         author_avatar_url: '',
+        is_anonymous: false,
         body: '如果对方在意面子，可以把数据框成“我们一起还没解释清楚的现象”，让他有空间把方案改成自己的下一版，而不是被当众纠正。',
         created_at: hoursAgo(10),
         upvote_count: 3,
@@ -60,6 +62,7 @@ function initialDemoData() {
         post_id: 1,
         author_name: 'Wendy Zhang',
         author_avatar_url: '',
+        is_anonymous: false,
         body: '先从共同目标切入，再把数据当作一个需要一起解释的新信号，而不是结论。比如：“这组结果和我们的假设不太一样，我们一起看看可能漏掉了什么？”',
         created_at: hoursAgo(18),
         upvote_count: 0,
@@ -67,8 +70,9 @@ function initialDemoData() {
       {
         id: 1,
         post_id: 1,
-        author_name: '陈宇',
+        author_name: '匿名成员',
         author_avatar_url: '',
+        is_anonymous: true,
         body: '如果时间允许，可以先私下聊，不要在大会议里第一次提出。给对方保留重新包装方案的空间。',
         created_at: hoursAgo(21),
         upvote_count: 3,
@@ -173,7 +177,7 @@ export function createBackend() {
 
       const { data: replies, error: repliesError } = await supabase
         .from('replies')
-        .select('id,post_id,author_name,author_avatar_url,body,created_at,upvote_count,reply_votes(reply_id)')
+        .select('id,post_id,author_name,author_avatar_url,is_anonymous,body,created_at,upvote_count,reply_votes(reply_id)')
         .in('post_id', posts.map((post) => post.id))
 
       if (repliesError) throw repliesError
@@ -304,12 +308,14 @@ function createDemoBackend() {
 
     async createReply(postId, reply) {
       const data = readData()
+      const isAnonymous = Boolean(reply.is_anonymous)
       data.replies.push({
         id: data.nextReplyId++,
         post_id: postId,
-        author_name: demoUser.user_metadata.full_name,
+        author_name: isAnonymous ? '匿名成员' : demoUser.user_metadata.full_name,
         author_avatar_url: '',
-        ...reply,
+        is_anonymous: isAnonymous,
+        body: reply.body,
         upvote_count: 0,
         created_at: new Date().toISOString(),
       })
