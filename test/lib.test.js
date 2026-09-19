@@ -7,9 +7,11 @@ import {
   initials,
   normalizeInviteCode,
   safeAvatarUrl,
+  sortReplies,
   validateInviteCode,
   validatePost,
   validateReply,
+  withVoteState,
 } from '../src/lib.js'
 import { renderMarkdown, safeHref } from '../src/markdown.js'
 
@@ -59,6 +61,33 @@ test('display names and initials have safe fallbacks', () => {
   assert.equal(displayName({ user_metadata: {} }), 'Google 用户')
   assert.equal(initials('Helena Li'), 'HL')
   assert.equal(initials('小明'), '小明')
+})
+
+test('replies sort by upvote count then oldest first', () => {
+  const replies = [
+    { id: 2, created_at: '2026-09-15T10:00:00Z', upvote_count: 0, body: 'new zero' },
+    { id: 3, created_at: '2026-09-15T12:00:00Z', upvote_count: 3, body: 'newer high' },
+    { id: 1, created_at: '2026-09-15T08:00:00Z', upvote_count: 3, body: 'older high' },
+  ]
+
+  assert.deepEqual(
+    sortReplies(replies).map((reply) => reply.id),
+    [1, 3, 2],
+  )
+  assert.equal(replies[0].id, 2)
+})
+
+test('vote state clamps negative counts and coerces liked to a boolean', () => {
+  assert.deepEqual(withVoteState({ id: 1, upvote_count: 2 }, true), {
+    id: 1,
+    upvote_count: 2,
+    liked_by_me: true,
+  })
+  assert.deepEqual(withVoteState({ id: 2, upvote_count: -3 }, undefined), {
+    id: 2,
+    upvote_count: 0,
+    liked_by_me: false,
+  })
 })
 
 test('markdown renders emphasis, lists, line breaks and safe links', () => {

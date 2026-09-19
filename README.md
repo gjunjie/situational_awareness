@@ -6,8 +6,9 @@ The smallest launchable product is intentionally only this:
 2. Redeem an invite code once, the first time.
 3. Publish an anonymous text post.
 4. Reply with the Google account's display name and avatar.
+5. Upvote a reply; replies in a thread sort by vote count.
 
-There are no DMs, profiles, likes, search, categories, notifications, images, realtime updates, or admin UI. Admin moderation, including creating invite codes, happens directly in the Supabase dashboard.
+There are no DMs, profiles, search, categories, notifications, images, realtime updates, or admin UI. Admin moderation, including creating invite codes, happens directly in the Supabase dashboard.
 
 ## Local UI demo
 
@@ -18,14 +19,14 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:5173/?demo=1`. Demo data stays in that browser's `localStorage` and never reaches Supabase. The demo invite code is `DEMO2026`.
+Open `http://localhost:5173/?demo=1`. Demo data stays in that browser's `localStorage` and never reaches Supabase. The demo invite code is `DEMO2026`. Replies can be upvoted; the thread reorders by vote count, then by time.
 
 ## Connect Supabase
 
 Use Node 20 or newer and Supabase CLI 2.117.0.
 
 1. Create or choose a Supabase project.
-2. Link the repo and apply the committed migration:
+2. Link the repo and apply the committed migrations:
 
    ```bash
    npx supabase@2.117.0 link --project-ref YOUR_PROJECT_REF
