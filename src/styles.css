@@ -149,7 +149,7 @@ a:focus-visible {
 
 .eyebrow {
   margin: 0 0 8px;
-  color: var(--brand);
+  color: var(--insight-text);
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.14em;
@@ -225,6 +225,23 @@ button:disabled {
   color: var(--text-faint);
   font-size: 12px;
   text-align: center;
+}
+
+.invite-error {
+  margin: 10px 0 0;
+  color: var(--danger);
+  font-size: 13px;
+}
+
+.invite-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.invite-signout {
+  display: block;
+  margin: 22px auto 0;
 }
 
 .app-shell {
@@ -343,7 +360,7 @@ button:disabled {
 }
 
 .rule-number {
-  color: var(--brand);
+  color: var(--insight-text);
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 700;
@@ -600,8 +617,8 @@ textarea::placeholder {
   flex: none;
   overflow: hidden;
   place-items: center;
-  color: var(--brand);
-  background: var(--brand-tint);
+  color: var(--verified);
+  background: var(--verified-tint);
   border-radius: 50%;
   font-size: 10px;
   font-weight: 800;
@@ -653,7 +670,6 @@ textarea::placeholder {
 .post-body,
 .reply-body {
   overflow-wrap: anywhere;
-  white-space: pre-wrap;
 }
 
 .post-body {
@@ -661,6 +677,67 @@ textarea::placeholder {
   color: var(--text-soft);
   font-size: 15px;
   line-height: 1.78;
+}
+
+.markdown-body > :first-child {
+  margin-top: 0;
+}
+
+.markdown-body > :last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body p,
+.markdown-body ul,
+.markdown-body ol,
+.markdown-body blockquote,
+.markdown-body pre {
+  margin: 0.7em 0;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 1.3em;
+}
+
+.markdown-body li + li {
+  margin-top: 0.25em;
+}
+
+.markdown-body a {
+  color: var(--brand);
+  text-underline-offset: 2px;
+}
+
+.markdown-body a:hover {
+  color: var(--brand-hover);
+}
+
+.markdown-body code {
+  padding: 0.1em 0.35em;
+  background: var(--surface-sunken);
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.92em;
+}
+
+.markdown-body pre {
+  padding: 12px 14px;
+  overflow-x: auto;
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.markdown-body pre code {
+  padding: 0;
+  background: none;
+}
+
+.markdown-body blockquote {
+  padding: 8px 12px;
+  background: var(--surface-sunken);
+  border-left: 3px solid var(--border);
 }
 
 .thread {
@@ -726,6 +803,47 @@ textarea::placeholder {
   color: var(--text-soft);
   font-size: 14px;
   line-height: 1.75;
+}
+
+.vote-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  min-height: 32px;
+  padding: 0 10px 0 8px;
+  color: var(--text-faint);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.vote-button svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.vote-button:hover,
+.vote-button[aria-pressed="true"] {
+  color: var(--brand);
+  background: var(--brand-tint);
+  border-color: var(--brand);
+}
+
+.vote-button[aria-pressed="true"] svg {
+  fill: currentcolor;
+}
+
+.vote-count {
+  font-variant-numeric: tabular-nums;
 }
 
 .empty-replies {
