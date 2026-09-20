@@ -10,6 +10,18 @@ export function normalizeText(value) {
   return String(value ?? '').trim()
 }
 
+export function normalizeInviteCode(value) {
+  return String(value ?? '').trim().toUpperCase()
+}
+
+export function validateInviteCode(value) {
+  const code = normalizeInviteCode(value)
+  if (!code) {
+    return { ok: false, message: '请输入邀请码。' }
+  }
+  return { ok: true, value: code }
+}
+
 export function validatePost(title, body) {
   const cleanTitle = normalizeText(title)
   const cleanBody = normalizeText(body)
@@ -30,7 +42,7 @@ export function validatePost(title, body) {
   return { ok: true, value: { title: cleanTitle, body: cleanBody } }
 }
 
-export function validateReply(body) {
+export function validateReply(body, anonymous = false) {
   const cleanBody = normalizeText(body)
 
   if (!cleanBody) {
@@ -40,7 +52,7 @@ export function validateReply(body) {
     return { ok: false, message: `回复不能超过 ${LIMITS.replyMax} 个字。` }
   }
 
-  return { ok: true, value: { body: cleanBody } }
+  return { ok: true, value: { body: cleanBody, is_anonymous: Boolean(anonymous) } }
 }
 
 export function validateFeedback(body) {
@@ -107,4 +119,29 @@ export function initials(name) {
     return `${chunks[0][0]}${chunks.at(-1)[0]}`.toUpperCase()
   }
   return cleanName.slice(0, 2).toUpperCase()
+}
+
+export function compareReplies(a, b) {
+  const voteDiff = (Number(b?.upvote_count) || 0) - (Number(a?.upvote_count) || 0)
+  if (voteDiff !== 0) return voteDiff
+
+  const timeA = new Date(a?.created_at).getTime()
+  const timeB = new Date(b?.created_at).getTime()
+  const safeA = Number.isFinite(timeA) ? timeA : 0
+  const safeB = Number.isFinite(timeB) ? timeB : 0
+  if (safeA !== safeB) return safeA - safeB
+
+  return (Number(a?.id) || 0) - (Number(b?.id) || 0)
+}
+
+export function sortReplies(replies) {
+  return [...(replies || [])].sort(compareReplies)
+}
+
+export function withVoteState(reply, liked) {
+  return {
+    ...reply,
+    upvote_count: Math.max(0, Number(reply.upvote_count) || 0),
+    liked_by_me: Boolean(liked),
+  }
 }

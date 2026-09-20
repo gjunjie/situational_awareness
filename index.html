@@ -49,7 +49,7 @@
         <p class="eyebrow">一个人想不通的事，大家一起想</p>
         <h1 id="login-title">带着真实困境来，<br />带着更多视角走。</h1>
         <p class="login-copy">
-          发帖始终匿名，回复使用 Google 名称。只有登录成员能看到讨论。
+          发帖始终匿名，回复可选择匿名。只有登录成员能看到讨论。
         </p>
 
         <button id="login-button" class="google-button" type="button">
@@ -62,6 +62,49 @@
           <span>使用 Google 登录</span>
         </button>
         <p class="privacy-note">不提供邮箱密码注册，不发送营销邮件。</p>
+      </section>
+    </main>
+
+    <main id="invite-view" class="center-view" hidden>
+      <section class="login-card" aria-labelledby="invite-title">
+        <div class="login-brand">
+          <div class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 40 40">
+              <circle cx="20" cy="20" r="16" />
+              <path d="M20 8l4 12-4 12-4-12z" />
+              <circle class="brand-center" cx="20" cy="20" r="2" />
+            </svg>
+          </div>
+          <div>
+            <div class="brand-name">Situational Awareness</div>
+            <div class="brand-subtitle">职场态势感知社群</div>
+          </div>
+        </div>
+
+        <p class="eyebrow">还差最后一步</p>
+        <h1 id="invite-title">输入邀请码，<br />加入讨论。</h1>
+        <p class="login-copy">
+          这是一个邀请制社区。没有邀请码可以先向邀请你的人要一个。
+        </p>
+
+        <form id="invite-form">
+          <label for="invite-code-input">邀请码</label>
+          <input
+            id="invite-code-input"
+            name="inviteCode"
+            type="text"
+            autocomplete="off"
+            autocapitalize="characters"
+            placeholder="例如：DEMO2026"
+            required
+          />
+          <p id="invite-error" class="invite-error" role="alert" hidden></p>
+          <div class="invite-actions">
+            <button class="primary-button" type="submit">加入</button>
+          </div>
+        </form>
+
+        <button id="invite-signout-button" class="text-button invite-signout" type="button">退出登录</button>
       </section>
     </main>
 
@@ -95,7 +138,7 @@
           <p class="eyebrow">讨论广场</p>
           <h1>把困境说清楚，<br />让同行帮你想。</h1>
           <p>
-            这里暂时只有两件事：匿名发帖，实名回复。没有点赞、私聊、排行榜和通知。
+            这里暂时只有两件事：匿名发帖，回复可选匿名。没有点赞、私聊、排行榜和通知。
           </p>
           <div class="rule-card">
             <div>
@@ -104,7 +147,7 @@
             </div>
             <div>
               <span class="rule-number">02</span>
-              <p><strong>回复实名</strong><br />回复展示你的 Google 名称与头像。</p>
+              <p><strong>回复可选匿名</strong><br />默认展示 Google 名称，也可勾选匿名。</p>
             </div>
           </div>
         </aside>

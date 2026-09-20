@@ -7,9 +7,11 @@ import {
   initials,
   safeAvatarUrl,
   validateFeedback,
+  validateInviteCode,
   validatePost,
   validateReply,
 } from './lib.js'
+import { renderMarkdown } from './markdown.js'
 
 const backend = createBackend()
 const elements = {
@@ -23,6 +25,11 @@ const elements = {
   feedbackCancel: document.querySelector('#feedback-cancel'),
   feedbackDialog: document.querySelector('#feedback-dialog'),
   feedbackForm: document.querySelector('#feedback-form'),
+  inviteCodeInput: document.querySelector('#invite-code-input'),
+  inviteError: document.querySelector('#invite-error'),
+  inviteForm: document.querySelector('#invite-form'),
+  inviteSignoutButton: document.querySelector('#invite-signout-button'),
+  inviteView: document.querySelector('#invite-view'),
   loading: document.querySelector('#loading-view'),
   login: document.querySelector('#signed-out-view'),
   loginButton: document.querySelector('#login-button'),
@@ -42,6 +49,7 @@ let toastTimer = null
 function setView(view) {
   elements.loading.hidden = view !== 'loading'
   elements.login.hidden = view !== 'login'
+  elements.inviteView.hidden = view !== 'invite'
   elements.app.hidden = view !== 'app'
 }
 
@@ -69,6 +77,9 @@ function showToast(message, kind = 'normal') {
 
 function friendlyError(error) {
   const message = String(error?.message || error || '')
+  if (/not_authenticated/i.test(message)) {
+    return '登录状态已失效，请重新登录后再试。'
+  }
   if (/row-level security|permission denied|42501/i.test(message)) {
     return '当前账号没有操作权限。请确认使用 Google 登录并已应用数据库脚本。'
   }
@@ -83,6 +94,16 @@ function element(tag, className, text) {
   if (className) node.className = className
   if (text !== undefined) node.textContent = text
   return node
+}
+
+function makeMarkdownBody(className, source) {
+  const body = element('div', `${className} markdown-body`)
+  try {
+    body.innerHTML = renderMarkdown(source)
+  } catch {
+    body.textContent = String(source ?? '')
+  }
+  return body
 }
 
 function makeAvatar(name, avatarUrl, anonymous = false) {
@@ -108,19 +129,75 @@ function makeAvatar(name, avatarUrl, anonymous = false) {
 }
 
 function makeReply(reply) {
+  const anonymous = Boolean(reply.is_anonymous)
   const item = element('li', 'reply')
-  item.append(makeAvatar(reply.author_name, reply.author_avatar_url))
+  item.append(makeAvatar(reply.author_name, reply.author_avatar_url, anonymous))
 
   const content = element('div', 'reply-content')
   const header = element('div', 'reply-header')
   header.append(
-    element('strong', 'reply-name', reply.author_name || 'Google 用户'),
+    element('strong', 'reply-name', anonymous ? '匿名成员' : reply.author_name || 'Google 用户'),
     element('time', 'reply-time', formatRelativeTime(reply.created_at)),
   )
-  const body = element('p', 'reply-body', reply.body)
-  content.append(header, body)
+  const body = makeMarkdownBody('reply-body', reply.body)
+  content.append(header, body, makeVoteButton(reply))
   item.append(content)
   return item
+}
+
+function replyIdentityText(anonymous) {
+  return anonymous
+    ? '将以匿名身份回复'
+    : `将以 ${displayName(session?.user)} 的名义回复`
+}
+
+function makeThumbsUpIcon() {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+  svg.setAttribute('viewBox', '0 0 24 24')
+  svg.setAttribute('aria-hidden', 'true')
+  svg.innerHTML =
+    '<path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/>'
+  return svg
+}
+
+function makeVoteButton(reply) {
+  let liked = Boolean(reply.liked_by_me)
+  let count = Math.max(0, Number(reply.upvote_count) || 0)
+  const button = document.createElement('button')
+  const countLabel = element('span', 'vote-count', String(count))
+  button.type = 'button'
+  button.className = 'vote-button'
+  button.append(makeThumbsUpIcon(), countLabel)
+
+  function render() {
+    button.setAttribute('aria-pressed', liked ? 'true' : 'false')
+    button.setAttribute('aria-label', liked ? `取消点赞，当前 ${count} 人点赞` : `点赞，当前 ${count} 人点赞`)
+    countLabel.textContent = String(count)
+  }
+  render()
+
+  button.addEventListener('click', async () => {
+    if (button.disabled) return
+    button.disabled = true
+    const previousLiked = liked
+    const previousCount = count
+    liked = !liked
+    count = Math.max(0, count + (liked ? 1 : -1))
+    render()
+
+    try {
+      await backend.toggleReplyVote(reply.id)
+    } catch (error) {
+      liked = previousLiked
+      count = previousCount
+      render()
+      showToast(friendlyError(error), 'error')
+    } finally {
+      button.disabled = false
+    }
+  })
+
+  return button
 }
 
 function makeReplyForm(postId) {
@@ -128,7 +205,10 @@ function makeReplyForm(postId) {
   const label = element('label', 'sr-only', '写下你的回复')
   const textarea = document.createElement('textarea')
   const actions = element('div', 'reply-actions')
-  const identity = element('span', 'reply-identity', `将以 ${displayName(session?.user)} 的名义回复`)
+  const meta = element('div', 'reply-meta')
+  const anonymousLabel = element('label', 'checkbox-line')
+  const anonymousInput = document.createElement('input')
+  const identity = element('span', 'reply-identity', replyIdentityText(false))
   const button = element('button', 'secondary-button', '发布回复')
 
   label.htmlFor = `reply-${postId}`
@@ -138,14 +218,25 @@ function makeReplyForm(postId) {
   textarea.maxLength = LIMITS.replyMax
   textarea.placeholder = '分享你的判断、经历或一个值得追问的问题…'
   textarea.required = true
+
+  anonymousInput.type = 'checkbox'
+  anonymousInput.name = 'anonymous'
+  anonymousLabel.append(anonymousInput, document.createTextNode('匿名回复'))
+  identity.id = `reply-identity-${postId}`
+  anonymousInput.setAttribute('aria-describedby', identity.id)
+  anonymousInput.addEventListener('change', () => {
+    identity.textContent = replyIdentityText(anonymousInput.checked)
+  })
+
   button.type = 'submit'
 
-  actions.append(identity, button)
+  meta.append(anonymousLabel, identity)
+  actions.append(meta, button)
   form.append(label, textarea, actions)
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault()
-    const result = validateReply(textarea.value)
+    const result = validateReply(textarea.value, anonymousInput.checked)
     if (!result.ok) {
       showToast(result.message, 'error')
       textarea.focus()
@@ -157,7 +248,7 @@ function makeReplyForm(postId) {
       await backend.createReply(postId, result.value)
       textarea.value = ''
       await loadPosts({ preserveOpenPost: String(postId) })
-      showToast('回复已发布。')
+      showToast(result.value.is_anonymous ? '已匿名回复。' : '回复已发布。')
     } catch (error) {
       showToast(friendlyError(error), 'error')
     } finally {
@@ -181,7 +272,7 @@ function makePost(post, shouldOpen = false) {
   header.append(meta)
 
   const title = element('h3', 'post-title', post.title)
-  const body = element('p', 'post-body', post.body)
+  const body = makeMarkdownBody('post-body', post.body)
 
   const thread = document.createElement('details')
   thread.className = 'thread'
@@ -261,6 +352,14 @@ async function renderSession(nextSession) {
     return
   }
 
+  const isMember = await backend.isMember(session.user.id)
+  if (!isMember) {
+    elements.inviteError.hidden = true
+    elements.inviteCodeInput.value = ''
+    setView('invite')
+    return
+  }
+
   elements.accountName.textContent = displayName(session.user)
   setView('app')
   await loadPosts()
@@ -285,6 +384,46 @@ elements.logoutButton.addEventListener('click', async () => {
     showToast(friendlyError(error), 'error')
   } finally {
     setButtonBusy(elements.logoutButton, false)
+  }
+})
+
+elements.inviteSignoutButton.addEventListener('click', async () => {
+  setButtonBusy(elements.inviteSignoutButton, true, '退出中…')
+  try {
+    await backend.signOut()
+  } catch (error) {
+    showToast(friendlyError(error), 'error')
+  } finally {
+    setButtonBusy(elements.inviteSignoutButton, false)
+  }
+})
+
+elements.inviteForm.addEventListener('submit', async (event) => {
+  event.preventDefault()
+  const result = validateInviteCode(elements.inviteCodeInput.value)
+  if (!result.ok) {
+    elements.inviteError.textContent = result.message
+    elements.inviteError.hidden = false
+    return
+  }
+
+  const button = elements.inviteForm.querySelector('button[type="submit"]')
+  setButtonBusy(button, true, '加入中…')
+  try {
+    const admitted = await backend.redeemInviteCode(result.value)
+    if (!admitted) {
+      elements.inviteError.textContent = '邀请码无效或已用完。'
+      elements.inviteError.hidden = false
+      return
+    }
+
+    elements.inviteError.hidden = true
+    await renderSession(session)
+  } catch (error) {
+    elements.inviteError.textContent = friendlyError(error)
+    elements.inviteError.hidden = false
+  } finally {
+    setButtonBusy(button, false)
   }
 })
 
@@ -353,7 +492,10 @@ async function start() {
   if (backend.isDemo) elements.loginButton.querySelector('span').textContent = '进入演示版'
 
   backend.onAuthChange((nextSession) => {
-    renderSession(nextSession).catch((error) => showToast(friendlyError(error), 'error'))
+    renderSession(nextSession).catch((error) => {
+      setView('login')
+      showToast(friendlyError(error), 'error')
+    })
   })
 
   try {
